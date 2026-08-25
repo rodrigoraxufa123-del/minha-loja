@@ -3,192 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema de Controle de Estoque</title>
-  <style>
-    :root {
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --danger: #ef4444;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text: #1e293b;
-      --border: #e2e8f0;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding: 20px; }
-    .container { max-width: 1000px; margin: 0 auto; }
-    
-    h1 { margin-bottom: 20px; font-size: 1.8rem; }
-    
-    .card {
-      background: var(--card-bg);
-      padding: 20px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      margin-bottom: 20px;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    input, button {
-      padding: 10px 14px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      font-size: 0.95rem;
-    }
-
-    input:focus { outline: 2px solid var(--primary); border-color: transparent; }
-
-    button {
-      background-color: var(--primary);
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background 0.2s;
-    }
-
-    button:hover { background-color: var(--primary-hover); }
-    button.btn-danger { background-color: var(--danger); padding: 6px 12px; font-size: 0.85rem; }
-
-    .search-bar { width: 100%; margin-bottom: 16px; }
-
-    table { width: 100%; border-collapse: collapse; text-align: left; }
-    th, td { padding: 12px; border-bottom: 1px solid var(--border); }
-    th { background-color: #f1f5f9; font-weight: 600; }
-
-    .status-low { color: #dc2626; font-weight: bold; }
-    .empty-state { text-align: center; color: #64748b; padding: 20px; }
-  </style>
+  <title>Meu Blog</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="container">
-    <h1>📦 Controle de Estoque</h1>
-
-    <!-- Formulário de Cadastro -->
-    <div class="card">
-      <h2 style="font-size: 1.2rem; margin-bottom: 12px;">Cadastrar Novo Item</h2>
-      <form id="productForm">
-        <div class="form-grid">
-          <input type="text" id="name" placeholder="Nome do Produto" required>
-          <input type="text" id="category" placeholder="Categoria" required>
-          <input type="number" id="quantity" placeholder="Quantidade" min="0" required>
-          <input type="number" id="price" placeholder="Preço (R$)" step="0.01" min="0" required>
-        </div>
-        <button type="submit">Adicionar Produto</button>
-      </form>
+  <header class="header">
+    <div class="container">
+      <h1 class="logo">Meu Blog</h1>
+      <nav>
+        <a href="#">Início</a>
+        <a href="#">Sobre</a>
+        <a href="#">Contato</a>
+      </nav>
     </div>
+  </header>
 
-    <!-- Tabela de Produtos -->
-    <div class="card">
-      <input type="text" id="searchInput" class="search-bar" placeholder="🔍 Buscar por nome ou categoria...">
-      
-      <table>
-        <thead>
-          <tr>
-            <th>Produto</th>
-            <th>Categoria</th>
-            <th>Qtd.</th>
-            <th>Preço Unit.</th>
-            <th>Total</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody id="inventoryList">
-          <!-- Itens renderizados via JS -->
-        </tbody>
-      </table>
-    </div>
+  <div class="container layout">
+    <main class="posts">
+      <article class="card">
+        <h2>Como Começar na Programação em 2026</h2>
+        <p class="date">Publicado em 25 de Agosto, 2026</p>
+        <p>Aprender a programar ficou ainda mais dinâmico. Neste artigo, veja o passo a passo para dominar a lógica e escolher sua primeira linguagem...</p>
+        <a href="#" class="read-more">Leia mais &rarr;</a>
+      </article>
+
+      <article class="card">
+        <h2>Dicas de Produtividade para Devs</h2>
+        <p class="date">Publicado em 20 de Agosto, 2026</p>
+        <p>Manter o foco e organizar seu fluxo de trabalho pode ser um desafio. Confira as ferramentas que ajudam a otimizar a sua rotina...</p>
+        <a href="#" class="read-more">Leia mais &rarr;</a>
+      </article>
+    </main>
+
+    <aside class="sidebar">
+      <div class="widget">
+        <h3>Buscar</h3>
+        <input type="text" id="searchInput" placeholder="Buscar no blog...">
+      </div>
+      <div class="widget">
+        <h3>Sobre Mim</h3>
+        <p>Bem-vindo ao meu espaço! Escrevo sobre tecnologia, desenvolvimento e cotidiano.</p>
+      </div>
+      <div class="widget">
+        <h3>Categorias</h3>
+        <ul>
+          <li><a href="#">Tecnologia</a></li>
+          <li><a href="#">Desenvolvimento</a></li>
+          <li><a href="#">Dicas</a></li>
+        </ul>
+      </div>
+    </aside>
   </div>
 
-  <script>
-    // Gerenciamento de Estado no LocalStorage
-    let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+  <footer class="footer">
+    <p>&copy; 2026 Meu Blog. Todos os direitos reservados.</p>
+  </footer>
 
-    const productForm = document.getElementById('productForm');
-    const inventoryList = document.getElementById('inventoryList');
-    const searchInput = document.getElementById('searchInput');
-
-    // Salvar dados no LocalStorage
-    function saveInventory() {
-      localStorage.setItem('inventory', JSON.stringify(inventory));
-    }
-
-    // Formatar Moeda
-    function formatCurrency(value) {
-      return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
-    }
-
-    // Renderizar a Tabela
-    function renderInventory(filterText = '') {
-      inventoryList.innerHTML = '';
-
-      const filteredItems = inventory.filter(item => 
-        item.name.toLowerCase().includes(filterText.toLowerCase()) ||
-        item.category.toLowerCase().includes(filterText.toLowerCase())
-      );
-
-      if (filteredItems.length === 0) {
-        inventoryList.innerHTML = `<tr><td colspan="6" class="empty-state">Nenhum produto encontrado.</td></tr>`;
-        return;
-      }
-
-      filteredItems.forEach((item, index) => {
-        const tr = document.createElement('tr');
-        const isLow = item.quantity <= 5;
-
-        tr.innerHTML = `
-          <td><strong>${item.name}</strong></td>
-          <td>${item.category}</td>
-          <td class="${isLow ? 'status-low' : ''}">${item.quantity} ${isLow ? '⚠️' : ''}</td>
-          <td>${formatCurrency(item.price)}</td>
-          <td>${formatCurrency(item.quantity * item.price)}</td>
-          <td>
-            <button class="btn-danger" onclick="deleteProduct(${index})">Excluir</button>
-          </td>
-        `;
-        inventoryList.appendChild(tr);
-      });
-    }
-
-    // Adicionar Produto
-    productForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const newProduct = {
-        name: document.getElementById('name').value,
-        category: document.getElementById('category').value,
-        quantity: parseInt(document.getElementById('quantity').value),
-        price: parseFloat(document.getElementById('price').value)
-      };
-
-      inventory.push(newProduct);
-      saveInventory();
-      renderInventory();
-      productForm.reset();
-    });
-
-    // Excluir Produto
-    function deleteProduct(index) {
-      inventory.splice(index, 1);
-      saveInventory();
-      renderInventory(searchInput.value);
-    }
-
-    // Filtrar Produtos
-    searchInput.addEventListener('input', (e) => {
-      renderInventory(e.target.value);
-    });
-
-    // Inicialização
-    renderInventory();
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
+
