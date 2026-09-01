@@ -1,3 +1,10 @@
 {
-  "usuarios": []
+  "usuarios": [
+    {
+      "id": 1788280377796,
+      "nome": "Rodrigo dos santos Nascimento ",
+      "email": "rodrigoraxufa123@gmail.com",
+      "senha": "$2b$10$U3JJoqjmenZZpOaQU4Vj4eXA1fuRrVKBGqKWEX1pXdfV8F.pvhnfa"
+    }
+  ]
 }
