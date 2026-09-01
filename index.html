@@ -468,7 +468,7 @@
                 <button type="submit" class="btn-submit" id="btn-texto">Entrar</button>
             </form>
             <div class="toggle-auth" id="toggle-btn">
-                Ainda não tem conta? <span onclick="alternarModo(true)">Cadastrar</span>
+                Ainda não tem conta? <span id="link-alternar">Cadastrar</span>
             </div>
         </div>
     </div>
@@ -485,7 +485,7 @@
             </div>
             <div class="header-actions">
                 <div class="header-badge">Fé • União • Propósito</div>
-                <button class="btn-sair" onclick="deslogar()">Sair</button>
+                <button class="btn-sair" id="btn-sair">Sair</button>
             </div>
         </header>
 
@@ -689,7 +689,7 @@
                 </div>
             </section>
 
-            <!-- NOSSAS FINANÇAS -->
+            <!-- NOSSOS FINANÇAS -->
             <section id="financas-secao" class="secao">
                 <h2 style="color: var(--detalhe-azul); margin-bottom: 15px;">Gestão Financeira Familiar</h2>
                 
@@ -739,61 +739,95 @@
         </footer>
     </div>
 
-    <script>
+    <!-- SCRIPT DO NAVEGADOR E FIREBASE AUTHENTICATION -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            onAuthStateChanged, 
+            signOut 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // CONFIGURAÇÃO DO SEU PROJETO FIREBASE (Substitua pelos seus dados obtidos no Console do Firebase)
+        const firebaseConfig = {
+            apiKey: "SUA_API_KEY",
+            authDomain: "SEU_PROJETO.firebaseapp.com",
+            projectId: "SEU_PROJETO_ID",
+            storageBucket: "SEU_PROJETO.appspot.com",
+            messagingSenderId: "SEU_SENDER_ID",
+            appId: "SEU_APP_ID"
+        };
+
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
         let modoCadastro = false;
 
-        function alternarModo(cadastro) {
-            modoCadastro = cadastro;
-            document.getElementById('grupo-nome').style.display = modoCadastro ? 'block' : 'none';
-            document.getElementById('auth-titulo').innerText = modoCadastro ? 'Criar Conta' : 'Acesso Família RJI';
-            document.getElementById('btn-texto').innerText = modoCadastro ? 'Cadastrar' : 'Entrar';
-            document.getElementById('toggle-btn').innerHTML = modoCadastro 
-                ? 'Já tem uma conta? <span onclick="alternarModo(false)">Fazer Login</span>'
-                : 'Ainda não tem conta? <span onclick="alternarModo(true)">Cadastrar</span>';
+        // Alternar visualmente entre Login e Cadastro
+        const linkAlternar = document.getElementById('link-alternar');
+        if (linkAlternar) {
+            linkAlternar.addEventListener('click', () => {
+                modoCadastro = !modoCadastro;
+                document.getElementById('grupo-nome').style.display = modoCadastro ? 'block' : 'none';
+                document.getElementById('auth-titulo').innerText = modoCadastro ? 'Criar Conta' : 'Acesso Família RJI';
+                document.getElementById('btn-texto').innerText = modoCadastro ? 'Cadastrar' : 'Entrar';
+                document.getElementById('toggle-btn').innerHTML = modoCadastro 
+                    ? 'Já tem uma conta? <span id="link-alternar">Fazer Login</span>'
+                    : 'Ainda não tem conta? <span id="link-alternar">Cadastrar</span>';
+            });
         }
 
+        // Evento de envio do formulário (Login / Cadastro)
         document.getElementById('auth-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value.trim();
             const senha = document.getElementById('senha').value.trim();
-            const nome = document.getElementById('nome').value.trim();
-
-            let usuarios = JSON.parse(localStorage.getItem('usuarios_rji')) || [];
 
             if (modoCadastro) {
-                const usuarioExiste = usuarios.find(u => u.email === email);
-                if (usuarioExiste) {
-                    alert('Este e-mail já está cadastrado!');
-                    return;
-                }
-                usuarios.push({ nome, email, senha });
-                localStorage.setItem('usuarios_rji', JSON.stringify(usuarios));
-                alert('Cadastro realizado com sucesso! Faça seu login.');
-                alternarModo(false);
+                // Criar conta no Firebase
+                createUserWithEmailAndPassword(auth, email, senha)
+                    .then((userCredential) => {
+                        alert("Conta criada com sucesso na nuvem!");
+                    })
+                    .catch((error) => {
+                        alert("Erro ao criar conta: " + error.message);
+                    });
             } else {
-                const usuarioValido = usuarios.find(u => u.email === email && u.senha === senha);
-                if (usuarioValido) {
-                    localStorage.setItem('usuario_logado', JSON.stringify(usuarioValido));
-                    carregarPainel();
-                } else {
-                    alert('E-mail ou senha incorretos!');
-                }
+                // Fazer Login no Firebase
+                signInWithEmailAndPassword(auth, email, senha)
+                    .then((userCredential) => {
+                        // Login com sucesso
+                    })
+                    .catch((error) => {
+                        alert("E-mail ou senha incorretos.");
+                    });
             }
         });
 
-        function carregarPainel() {
-            const usuario = JSON.parse(localStorage.getItem('usuario_logado'));
-            if (usuario) {
+        // Evento do botão Sair
+        document.getElementById('btn-sair').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                alert("Você saiu da conta.");
+            });
+        });
+
+        // Listener que monitora se o usuário está logado em tempo real
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
                 document.getElementById('auth-secao').style.display = 'none';
                 document.getElementById('painel-sistema').style.display = 'flex';
+            } else {
+                document.getElementById('auth-secao').style.display = 'flex';
+                document.getElementById('painel-sistema').style.display = 'none';
             }
-        }
+        });
+    </script>
 
-        function deslogar() {
-            localStorage.removeItem('usuario_logado');
-            window.location.reload();
-        }
-
+    <!-- FUNÇÕES AUXILIARES DE NAVEGAÇÃO INTERNA -->
+    <script>
         function mostrarSecao(idSecao, elementoBotao) {
             document.querySelectorAll('.secao').forEach(secao => secao.classList.remove('ativa'));
             document.querySelectorAll('.btn-nav').forEach(botao => botao.classList.remove('ativo'));
@@ -813,7 +847,6 @@
             }
         }
 
-        // Suporte a acessibilidade por teclado para os elementos da árvore
         document.querySelectorAll('.no-arvore').forEach(no => {
             no.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -822,9 +855,6 @@
                 }
             });
         });
-
-        // Executa ao carregar para verificar se já existe sessão salva
-        carregarPainel();
     </script>
 </body>
 </html>
