@@ -740,90 +740,101 @@
     </div>
 
     <!-- SCRIPT DO NAVEGADOR E FIREBASE AUTHENTICATION -->
-    <script type="module">
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+        getAuth, 
+        createUserWithEmailAndPassword, 
+        signInWithEmailAndPassword, 
+        onAuthStateChanged, 
+        signOut 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyAo1t6qzQvKIzSis434QOlf_CQxoHJ1zQc",
-  authDomain: "familiarji.firebaseapp.com",
-  projectId: "familiarji",
-  storageBucket: "familiarji.firebasestorage.app",
-  messagingSenderId: "500142135598",
-  appId: "1:500142135598:web:ee8e24549acf10584ac2bf",
-  measurementId: "G-3L4TJPKFM4"
-};
+    // Coloque suas chaves reais aqui
+    const firebaseConfig = {
+        apiKey: "SUA_API_KEY_REAL",
+        authDomain: "familiarji.firebaseapp.com",
+        projectId: "familiarji",
+        storageBucket: "familiarji.firebasestorage.app",
+        messagingSenderId: "500142135598",
+        appId: "SEU_APP_ID_REAL"
+    };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-        let modoCadastro = false;
+    let modoCadastro = false;
 
-        // Alternar visualmente entre Login e Cadastro
-        const linkAlternar = document.getElementById('link-alternar');
-        if (linkAlternar) {
-            linkAlternar.addEventListener('click', () => {
-                modoCadastro = !modoCadastro;
-                document.getElementById('grupo-nome').style.display = modoCadastro ? 'block' : 'none';
-                document.getElementById('auth-titulo').innerText = modoCadastro ? 'Criar Conta' : 'Acesso Família RJI';
-                document.getElementById('btn-texto').innerText = modoCadastro ? 'Cadastrar' : 'Entrar';
-                document.getElementById('toggle-btn').innerHTML = modoCadastro 
-                    ? 'Já tem uma conta? <span id="link-alternar">Fazer Login</span>'
-                    : 'Ainda não tem conta? <span id="link-alternar">Cadastrar</span>';
-            });
+    // Alternar entre Login e Cadastro ao clicar no texto
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggleBtn = document.getElementById('toggle-btn');
+        
+        toggleBtn.addEventListener('click', () => {
+            modoCadastro = !modoCadastro;
+            const grupoNome = document.getElementById('grupo-nome');
+            const authTitulo = document.getElementById('auth-titulo');
+            const btnTexto = document.getElementById('btn-texto');
+            
+            if (modoCadastro) {
+                grupoNome.style.display = 'block';
+                authTitulo.innerText = 'Criar Conta';
+                btnTexto.innerText = 'Cadastrar';
+                toggleBtn.innerHTML = 'Já tem uma conta? <span style="color:var(--detalhe-azul); text-decoration:underline;">Fazer Login</span>';
+            } else {
+                grupoNome.style.display = 'none';
+                authTitulo.innerText = 'Acesso Família RJI';
+                btnTexto.innerText = 'Entrar';
+                toggleBtn.innerHTML = 'Ainda não tem conta? <span style="color:var(--detalhe-azul); text-decoration:underline;">Cadastrar</span>';
+            }
+        });
+    });
+
+    // Envio do formulário
+    document.getElementById('auth-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value.trim();
+        const senha = document.getElementById('senha').value.trim();
+
+        if (!email || !senha) {
+            alert("Por favor, preencha e-mail e senha.");
+            return;
         }
 
-        // Evento de envio do formulário (Login / Cadastro)
-        document.getElementById('auth-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value.trim();
-            const senha = document.getElementById('senha').value.trim();
+        if (modoCadastro) {
+            createUserWithEmailAndPassword(auth, email, senha)
+                .then((userCredential) => {
+                    alert("Conta criada com sucesso na nuvem!");
+                })
+                .catch((error) => {
+                    alert("Erro ao criar conta: " + error.message);
+                });
+        } else {
+            signInWithEmailAndPassword(auth, email, senha)
+                .then((userCredential) => {
+                    // Login bem sucedido
+                })
+                .catch((error) => {
+                    alert("Erro ao entrar: " + error.message);
+                });
+        }
+    });
 
-            if (modoCadastro) {
-                // Criar conta no Firebase
-                createUserWithEmailAndPassword(auth, email, senha)
-                    .then((userCredential) => {
-                        alert("Conta criada com sucesso na nuvem!");
-                    })
-                    .catch((error) => {
-                        alert("Erro ao criar conta: " + error.message);
-                    });
-            } else {
-                // Fazer Login no Firebase
-                signInWithEmailAndPassword(auth, email, senha)
-                    .then((userCredential) => {
-                        // Login com sucesso
-                    })
-                    .catch((error) => {
-                        alert("E-mail ou senha incorretos.");
-                    });
-            }
-        });
+    // Botão Sair
+    document.getElementById('btn-sair').addEventListener('click', () => {
+        signOut(auth);
+    });
 
-        // Evento do botão Sair
-        document.getElementById('btn-sair').addEventListener('click', () => {
-            signOut(auth).then(() => {
-                alert("Você saiu da conta.");
-            });
-        });
-
-        // Listener que monitora se o usuário está logado em tempo real
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('auth-secao').style.display = 'none';
-                document.getElementById('painel-sistema').style.display = 'flex';
-            } else {
-                document.getElementById('auth-secao').style.display = 'flex';
-                document.getElementById('painel-sistema').style.display = 'none';
-            }
-        });
-    </script>
+    // Monitor do estado do usuário
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            document.getElementById('auth-secao').style.display = 'none';
+            document.getElementById('painel-sistema').style.display = 'flex';
+        } else {
+            document.getElementById('auth-secao').style.display = 'flex';
+            document.getElementById('painel-sistema').style.display = 'none';
+        }
+    });
+</script>
 
     <!-- FUNÇÕES AUXILIARES DE NAVEGAÇÃO INTERNA -->
     <script>
