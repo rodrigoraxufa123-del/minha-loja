@@ -181,44 +181,47 @@
                 : 'Ainda não tem conta? <span onclick="alternarModo(true)">Cadastrar</span>';
         }
 
-        document.getElementById('auth-form').addEventListener('submit', async (e) => {
+        document.getElementById('auth-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            const email = document.getElementById('email').value;
-            const senha = document.getElementById('senha').value;
-            const nome = document.getElementById('nome').value;
+            const email = document.getElementById('email').value.trim();
+            const senha = document.getElementById('senha').value.trim();
+            const nome = document.getElementById('nome').value.trim();
 
-            const endpoint = modoCadastro ? '/api/cadastrar' : '/api/login';
-            const payload = modoCadastro ? { nome, email, senha } : { email, senha };
+            // Buscar usuários salvos no navegador
+            let usuarios = JSON.parse(localStorage.getItem('usuarios_rji')) || [];
 
-            const resposta = await fetch(endpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            const dados = await resposta.json();
-
-            if (resposta.ok) {
-                if (modoCadastro) {
-                    alert('Cadastro feito com sucesso! Faça seu login.');
-                    alternarModo(false);
-                } else {
-                    localStorage.setItem('token', dados.token);
-                    localStorage.setItem('usuario', dados.nome);
-                    carregarPainel();
+            if (modoCadastro) {
+                // Verificar se o email já existe
+                const usuarioExiste = usuarios.find(u => u.email === email);
+                if (usuarioExiste) {
+                    alert('Este e-mail já está cadastrado!');
+                    return;
                 }
+
+                // Salvar novo usuário
+                usuarios.push({ nome, email, senha });
+                localStorage.setItem('usuarios_rji', JSON.stringify(usuarios));
+                alert('Cadastro realizado com sucesso! Faça seu login.');
+                alternarModo(false);
             } else {
-                alert(dados.mensagem);
+                // Processo de Login
+                const usuarioValido = usuarios.find(u => u.email === email && u.senha === senha);
+                
+                if (usuarioValido) {
+                    localStorage.setItem('usuario_logado', JSON.stringify(usuarioValido));
+                    carregarPainel();
+                } else {
+                    alert('E-mail ou senha incorretos!');
+                }
             }
         });
 
         function carregarPainel() {
-            const token = localStorage.getItem('token');
-            const usuario = localStorage.getItem('usuario');
-            if (token) {
+            const usuario = JSON.parse(localStorage.getItem('usuario_logado'));
+            if (usuario) {
                 document.getElementById('auth-secao').style.display = 'none';
                 document.getElementById('painel-sistema').style.display = 'block';
-                document.getElementById('usuario-logado').innerText = usuario;
+                document.getElementById('usuario-logado').innerText = usuario.nome;
             }
         }
 
@@ -231,11 +234,13 @@
         }
 
         function deslogar() {
-            localStorage.clear();
+            localStorage.removeItem('usuario_logado');
             window.location.reload();
         }
 
+        // Verifica ao carregar se já está logado
         carregarPainel();
     </script>
+
 </body>
 </html>
