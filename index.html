@@ -741,28 +741,27 @@
 
     <!-- SCRIPT DO NAVEGADOR E FIREBASE AUTHENTICATION -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { 
-            getAuth, 
-            createUserWithEmailAndPassword, 
-            signInWithEmailAndPassword, 
-            onAuthStateChanged, 
-            signOut 
-        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-        // CONFIGURAÇÃO DO SEU PROJETO FIREBASE (Substitua pelos seus dados obtidos no Console do Firebase)
-        const firebaseConfig = {
-            apiKey: "SUA_API_KEY",
-            authDomain: "SEU_PROJETO.firebaseapp.com",
-            projectId: "SEU_PROJETO_ID",
-            storageBucket: "SEU_PROJETO.appspot.com",
-            messagingSenderId: "SEU_SENDER_ID",
-            appId: "SEU_APP_ID"
-        };
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyAo1t6qzQvKIzSis434QOlf_CQxoHJ1zQc",
+  authDomain: "familiarji.firebaseapp.com",
+  projectId: "familiarji",
+  storageBucket: "familiarji.firebasestorage.app",
+  messagingSenderId: "500142135598",
+  appId: "1:500142135598:web:ee8e24549acf10584ac2bf",
+  measurementId: "G-3L4TJPKFM4"
+};
 
-        // Inicializar Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
         let modoCadastro = false;
 
