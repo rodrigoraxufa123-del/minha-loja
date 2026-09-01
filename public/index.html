@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Família RJI & Aço Castelo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-principal: #0f172a;
+            --bg-card: #1e293b;
+            --bg-hover: #334155;
+            --texto-principal: #f8fafc;
+            --texto-secundario: #94a3b8;
+            --detalhe-dourado: #fbbf24;
+            --detalhe-azul: #38bdf8;
+            --detalhe-verde: #4ade80;
+            --borda: #334155;
+            --sombra-card: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-principal); color: var(--texto-principal); min-height: 100vh; }
+
+        /* TELA DE AUTENTICAÇÃO */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--borda);
+            padding: 30px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .auth-card h2 { color: var(--detalhe-dourado); text-align: center; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; color: var(--texto-secundario); font-size: 0.9rem; }
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--borda);
+            background-color: #0f172a;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--detalhe-azul);
+            color: #0f172a;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .toggle-auth {
+            text-align: center;
+            margin-top: 15px;
+            color: var(--texto-secundario);
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .toggle-auth span { color: var(--detalhe-azul); text-decoration: underline; }
+
+        /* SISTEMA PRINCIPAL (INICIALMENTE OCULTO) */
+        #painel-sistema { display: none; }
+
+        header {
+            background-color: var(--bg-card);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--detalhe-dourado);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .header-title h1 { color: var(--detalhe-dourado); font-size: 1.8rem; }
+        .header-title p { color: var(--texto-secundario); font-size: 0.9rem; }
+
+        .btn-sair {
+            background-color: #f87171;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        main { max-width: 1100px; margin: 25px auto; padding: 0 15px; }
+
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 14px;
+            padding: 22px;
+            border: 1px solid var(--borda);
+            box-shadow: var(--sombra-card);
+        }
+
+        .card h3 { color: var(--detalhe-azul); margin-bottom: 12px; font-size: 1.2rem; }
+        
+        .destaque-valor {
+            background-color: rgba(74, 222, 128, 0.1);
+            border: 1px solid var(--detalhe-verde);
+            color: var(--detalhe-verde);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TELA DE LOGIN -->
+    <div id="auth-secao" class="auth-container">
+        <div class="auth-card">
+            <h2 id="auth-titulo">Acesso Família RJI</h2>
+            <form id="auth-form">
+                <div class="form-group" id="grupo-nome" style="display: none;">
+                    <label>Nome Completo</label>
+                    <input type="text" id="nome" placeholder="Digite seu nome">
+                </div>
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" id="email" required placeholder="seu@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="senha" required placeholder="******">
+                </div>
+                <button type="submit" class="btn-submit" id="btn-texto">Entrar</button>
+            </form>
+            <div class="toggle-auth" id="toggle-btn">
+                Ainda não tem conta? <span onclick="alternarModo(true)">Cadastrar</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ÁREA RESTRITA DO SITE -->
+    <div id="painel-sistema">
+        <header>
+            <div class="header-title">
+                <h1>FAMÍLIA RJI & AÇO CASTELO</h1>
+                <p>Usuário ativo: <strong id="usuario-logado" style="color: var(--detalhe-azul);"></strong></p>
+            </div>
+            <button class="btn-sair" onclick="deslogar()">Sair do Sistema</button>
+        </header>
+
+        <main>
+            <h2 style="color: var(--detalhe-dourado); margin-bottom: 15px;">Independência Financeira</h2>
+            <div class="grid-cards">
+                <div class="card">
+                    <h3>💼 Empreendimento Aço Castelo</h3>
+                    <p>Estruturar nossos negócios para gerar renda sustentável e liberdade de tempo para o Isaac.</p>
+                    <div class="destaque-valor">
+                        Meta em Conta: R$ 1.000.000,00
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let modoCadastro = false;
+
+        function alternarModo(cadastro) {
+            modoCadastro = cadastro;
+            document.getElementById('grupo-nome').style.display = modoCadastro ? 'block' : 'none';
+            document.getElementById('auth-titulo').innerText = modoCadastro ? 'Criar Conta' : 'Acesso Família RJI';
+            document.getElementById('btn-texto').innerText = modoCadastro ? 'Cadastrar' : 'Entrar';
+            document.getElementById('toggle-btn').innerHTML = modoCadastro 
+                ? 'Já tem uma conta? <span onclick="alternarModo(false)">Fazer Login</span>'
+                : 'Ainda não tem conta? <span onclick="alternarModo(true)">Cadastrar</span>';
+        }
+
+        document.getElementById('auth-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('senha').value;
+            const nome = document.getElementById('nome').value;
+
+            const endpoint = modoCadastro ? '/api/cadastrar' : '/api/login';
+            const payload = modoCadastro ? { nome, email, senha } : { email, senha };
+
+            const resposta = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const dados = await resposta.json();
+
+            if (resposta.ok) {
+                if (modoCadastro) {
+                    alert('Cadastro feito com sucesso! Faça seu login.');
+                    alternarModo(false);
+                } else {
+                    localStorage.setItem('token', dados.token);
+                    localStorage.setItem('usuario', dados.nome);
+                    carregarPainel();
+                }
+            } else {
+                alert(dados.mensagem);
+            }
+        });
+
+        function carregarPainel() {
+            const token = localStorage.getItem('token');
+            const usuario = localStorage.getItem('usuario');
+            if (token) {
+                document.getElementById('auth-secao').style.display = 'none';
+                document.getElementById('painel-sistema').style.display = 'block';
+                document.getElementById('usuario-logado').innerText = usuario;
+            }
+        }
+
+        function deslogar() {
+            localStorage.clear();
+            window.location.reload();
+        }
+
+        carregarPainel();
+    </script>
+</body>
+</html>
