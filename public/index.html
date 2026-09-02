@@ -467,6 +467,9 @@
                 </div>
                 <button type="submit" class="btn-submit" id="btn-texto">Entrar</button>
             </form>
+            <div class="toggle-auth" id="toggle-btn">
+                Ainda não tem conta? <span id="link-alternar">Cadastrar</span>
+            </div>
         </div>
     </div>
 
@@ -802,7 +805,6 @@ const firebaseConfig = {
             createUserWithEmailAndPassword(auth, email, senha)
                 .then((userCredential) => {
                     alert("Conta criada com sucesso na nuvem!");
-                document.getElementById('toggle-btn').click()
                 })
                 .catch((error) => {
                     alert("Erro ao criar conta: " + error.message);
