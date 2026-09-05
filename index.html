@@ -21,7 +21,6 @@
             overflow: hidden;
         }
 
-        /* Container Principal (Feed) */
         .feed-container {
             width: 100%;
             height: 100vh;
@@ -51,7 +50,6 @@
             z-index: 1;
         }
 
-        /* Gradiente escuro para os textos aparecerem */
         .overlay-bottom {
             position: absolute;
             bottom: 0;
@@ -60,7 +58,7 @@
             height: 50%;
             background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.6), transparent);
             z-index: 2;
-            padding: 20px 70px 30px 20px; /* Espaço na direita para os botões */
+            padding: 20px 70px 30px 20px;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
@@ -109,7 +107,6 @@
             text-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
         }
 
-        /* Botões laterais estilo TikTok */
         .sidebar {
             position: absolute;
             right: 15px;
@@ -160,7 +157,6 @@
             color: #ff3040;
         }
 
-        /* Botão de Compra Principal */
         .buy-btn {
             background: linear-gradient(90deg, #ff3b30, #ff9500);
             color: white;
@@ -188,7 +184,6 @@
             100% { transform: scale(1); }
         }
 
-        /* Animação de Coração Flutuante (Toque Duplo) */
         .floating-heart {
             position: absolute;
             font-size: 4rem;
@@ -205,7 +200,6 @@
             100% { transform: scale(1) translateY(-150px); opacity: 0; }
         }
 
-        /* Modal Gamificado de Caixa Surpresa */
         .modal-gamification {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -263,9 +257,7 @@
 </head>
 <body>
 
-    <div class="feed-container" id="feed">
-        <!-- Vídeos gerados via JS -->
-    </div>
+    <div class="feed-container" id="feed"></div>
 
     <!-- Caixa Surpresa Gamificada -->
     <div class="modal-gamification" id="surpriseModal">
@@ -273,14 +265,14 @@
             <div style="font-size: 4rem; margin-bottom: 10px;">🎁</div>
             <h2>OFERTA RELÂMPAGO!</h2>
             <p style="color: #cbd5e1; font-size: 0.95rem; margin-bottom: 15px;">
-                Você acabou de desbloquear um super desconto no próximo achadinho. Válido por 10 minutos!
+                Desbloqueaste um cupão secreto de frete grátis no próximo achadinho. Válido por 10 minutos!
             </p>
-            <button class="modal-btn" onclick="fecharModal()">RESGATAR AGORA 🛒</button>
+            <button class="modal-btn" onclick="fecharModal()">RESGATAR DESCONTO 🛒</button>
         </div>
     </div>
 
     <script>
-        // LISTA DE VÍDEOS (Você substituirá os links de vídeo pelos seus!)
+        // Lista com vídeos prontos de alta qualidade
         const achadinhos = [
             {
                 id: 1,
@@ -288,20 +280,39 @@
                 precoAntigo: "R$ 350,00",
                 precoNovo: "R$ 189,90",
                 loja: "Shopee",
-                // Aqui você pode colocar vídeos em MP4 reais hospedados no seu GitHub (ex: "video1.mp4")
-                video: "https://assets.mixkit.co/videos/preview/mixkit-hands-holding-a-smartphone-with-a-green-screen-42998-large.mp4",
+                video: "https://assets.mixkit.co/videos/preview/mixkit-woman-holding-a-neon-light-42994-large.mp4",
                 link: "https://shopee.com.br",
-                likes: 1245
+                likes: 1420
             },
             {
                 id: 2,
-                titulo: "Smartwatch Ultra Série 9 - O mais desejado!",
+                titulo: "Smartwatch Ultra Série 9 - À Prova de Água ⌚",
                 precoAntigo: "R$ 199,90",
                 precoNovo: "R$ 89,90",
                 loja: "Mercado Livre",
-                video: "https://assets.mixkit.co/videos/preview/mixkit-person-using-a-smartphone-in-a-dark-room-42997-large.mp4",
+                video: "https://assets.mixkit.co/videos/preview/mixkit-hands-holding-a-smartphone-with-a-green-screen-42998-large.mp4",
                 link: "https://mercadolivre.com.br",
-                likes: 832
+                likes: 953
+            },
+            {
+                id: 3,
+                titulo: "Luminária LED RGB Touch para Escritório Minimalista 💡",
+                precoAntigo: "R$ 99,90",
+                precoNovo: "R$ 49,90",
+                loja: "Shopee",
+                video: "https://assets.mixkit.co/videos/preview/mixkit-neon-lights-in-a-room-41554-large.mp4",
+                link: "https://shopee.com.br",
+                likes: 2104
+            },
+            {
+                id: 4,
+                titulo: "Ring Light Profissional com Tripé para Criadores 📸",
+                precoAntigo: "R$ 120,00",
+                precoNovo: "R$ 59,90",
+                loja: "Mercado Livre",
+                video: "https://assets.mixkit.co/videos/preview/mixkit-young-woman-recording-a-video-with-her-smartphone-41270-large.mp4",
+                link: "https://mercadolivre.com.br",
+                likes: 3812
             }
         ];
 
@@ -314,7 +325,6 @@
                 card.className = 'video-card';
                 card.dataset.id = item.id;
                 
-                // Sistema de duplo clique para curtir (Interação)
                 card.ondblclick = (e) => criarCoracaoFlutuante(e, card);
                 
                 card.innerHTML = `
@@ -350,8 +360,6 @@
             });
         }
 
-        // FUNÇÕES DE ENTRETENIMENTO & INTERAÇÃO
-
         function curtir(id) {
             const btn = document.getElementById(`likeBtn-${id}`);
             const countEl = document.getElementById(`likeCount-${id}`);
@@ -366,7 +374,6 @@
         }
 
         function criarCoracaoFlutuante(e, container) {
-            // Ao dar 2 toques, curte e cria coração
             const heart = document.createElement('div');
             heart.innerHTML = '❤️';
             heart.className = 'floating-heart';
@@ -395,20 +402,18 @@
         }
 
         function partilhar(titulo) {
-            const texto = encodeURIComponent(`Olha esse achadinho que encontrei: ${titulo}! Vê o vídeo aqui: ` + window.location.href);
+            const texto = encodeURIComponent(`Olha este achadinho viral: ${titulo}! Vê o vídeo aqui: ` + window.location.href);
             window.open(`https://api.whatsapp.com/send?text=${texto}`, '_blank');
         }
 
-        // GAMIFICAÇÃO: Mostrar modal de oferta aleatoriamente
         setTimeout(() => {
             document.getElementById('surpriseModal').classList.add('active');
-        }, 15000); // Aparece após 15 segundos no site para prender o usuário
+        }, 12000);
 
         function fecharModal() {
             document.getElementById('surpriseModal').classList.remove('active');
         }
 
-        // Inicia o sistema
         carregarFeed();
     </script>
 </body>
