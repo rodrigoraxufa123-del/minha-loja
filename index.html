@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="pt-PT">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>O Fofômetro Secreto 🤫</title>
+    <title>O Oráculo da Zoeira 🔮</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --primary: #f43f5e;
-            --accent: #8b5cf6;
+            --bg-color: #080711;
+            --card-bg: #151329;
+            --primary: #a855f7;
+            --accent: #ec4899;
             --text: #f8fafc;
             --text-muted: #94a3b8;
         }
@@ -23,7 +23,7 @@
 
         body {
             background-color: var(--bg-color);
-            background-image: radial-gradient(circle at 50% 20%, #4c1d95 0%, var(--bg-color) 70%);
+            background-image: radial-gradient(circle at 50% 30%, #3b0764 0%, var(--bg-color) 70%);
             color: var(--text);
             min-height: 100vh;
             display: flex;
@@ -36,25 +36,45 @@
         .container {
             width: 100%;
             max-width: 420px;
-            background: rgba(30, 41, 59, 0.9);
-            backdrop-filter: blur(15px);
+            background: rgba(21, 19, 41, 0.85);
+            backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 24px;
             padding: 30px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
             text-align: center;
         }
 
         h1 {
             font-size: 1.8rem;
-            color: #fb7185;
-            margin-bottom: 10px;
+            color: #d8b4fe;
+            margin-bottom: 8px;
         }
 
         p {
             color: var(--text-muted);
             font-size: 0.95rem;
             margin-bottom: 25px;
+        }
+
+        /* Animação da Bola de Cristal */
+        .crystal-ball {
+            width: 110px;
+            height: 110px;
+            background: radial-gradient(circle at 30% 30%, #f3e8ff, #a855f7, #581c87);
+            border-radius: 50%;
+            margin: 0 auto 25px auto;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.5), inset -10px -10px 20px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
         }
 
         input {
@@ -72,7 +92,7 @@
         input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 10px rgba(244, 63, 94, 0.3);
+            box-shadow: 0 0 12px rgba(168, 85, 247, 0.3);
         }
 
         .action-btn {
@@ -86,7 +106,7 @@
             cursor: pointer;
             width: 100%;
             transition: transform 0.1s, opacity 0.2s;
-            box-shadow: 0 10px 20px rgba(244, 63, 94, 0.3);
+            box-shadow: 0 10px 20px rgba(168, 85, 247, 0.3);
         }
 
         .action-btn:active {
@@ -94,13 +114,13 @@
         }
 
         .result-box {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.35);
             border: 1px dashed rgba(255, 255, 255, 0.2);
             padding: 20px;
             border-radius: 16px;
             margin-top: 20px;
             font-size: 1.1rem;
-            color: #fbcfe8;
+            color: #fce7f3;
             line-height: 1.5;
         }
 
@@ -124,20 +144,26 @@
 <body>
 
     <div class="container">
+        <!-- Ecrã Inicial -->
         <div id="screen-home">
-            <h1>🤫 O Fofômetro Secreto</h1>
-            <p>Descobre o que o universo (ou os vizinhos) dizem sobre ti ou sobre um amigo!</p>
+            <div class="crystal-ball">🔮</div>
+            <h1>O Oráculo da Zoeira</h1>
+            <p>Faz a tua pergunta secreta e descobre o que o futuro reserva...</p>
             
-            <input type="text" id="username" placeholder="Escreve um nome aqui...">
-            <button class="action-btn" onclick="gerarFofoca()">Revelar Segredo 🔥</button>
+            <input type="text" id="userQuestion" placeholder="Ex: Vou ficar rico este ano?">
+            <button class="action-btn" onclick="consultarOraculo()">Consultar o Oráculo ✨</button>
         </div>
 
+        <!-- Ecrã de Resposta -->
         <div id="screen-result" class="hidden">
-            <h1>Resultado Oficial 🕵️‍♂️</h1>
-            <div class="result-box" id="fofoca-text">Carregando segredo...</div>
+            <div class="crystal-ball" style="animation: none; transform: scale(0.9);">✨</div>
+            <h1>Resposta do Oráculo</h1>
+            <p id="displayed-question" style="font-style: italic; color: #a855f7;"></p>
+            
+            <div class="result-box" id="oraculo-answer">A consultar os astros...</div>
             
             <button class="action-btn whatsapp-btn" onclick="partilharWhatsApp()">Partilhar no WhatsApp 💬</button>
-            <button class="action-btn" style="background: rgba(255,255,255,0.1); margin-top: 10px;" onclick="voltarInicio()">Testar Outro Nome 🔄</button>
+            <button class="action-btn" style="background: rgba(255,255,255,0.1); margin-top: 10px;" onclick="voltarInicio()">Fazer Outra Pergunta 🔄</button>
         </div>
     </div>
 
@@ -146,42 +172,46 @@
     </footer>
 
     <script>
-        const fofocas = [
-            "já tentou abrir a porta de puxar empurrando e fingiu que ninguém viu.",
-            "passa mais de 3 horas por dia a olhar para o teto a pensar na vida.",
-            "tem um segredo guardado que nem a própria inteligência artificial consegue adivinhar!",
-            "comprou coisas desnecessárias na internet esta semana.",
-            "é o agente secreto do grupo e sabe de tudo o que se passa.",
-            "tem um talento escondido para dançar sozinho(a) no quarto às 3 da manhã.",
-            "já adormeceu a ver uma série e acordou no episódio seguinte sem entender nada."
+        const respostasOraculo = [
+            "As estrelas dizem que sim... mas só se fores dormir cedo hoje.",
+            "Com toda a certeza! Ou talvez não, os astros estão confusos.",
+            "Isso é mais improvável do que ganhares na lotaria sem comprar bilhete.",
+            "Sim, mas vais arrepender-te em 3 segundos.",
+            "O universo mandou avisar para esqueceres isso e ires comer um lanche.",
+            "Está escrito nas cartas: vais conseguir, mas com muito drama à mistura.",
+            "Pergunte novamente mais tarde, o oráculo está a tirar uma pausa para o café.",
+            "Cuidado... Há grandes chances de isso dar muito certo ou muito errado."
         ];
 
-        let ultimoResultado = "";
+        let perguntaAtual = "";
+        let respostaAtual = "";
 
-        function gerarFofoca() {
-            const nome = document.getElementById('username').value.trim();
+        function consultarOraculo() {
+            const input = document.getElementById('userQuestion').value.trim();
             
-            if (!nome) {
-                alert("Por favor, escreve um nome primeiro!");
+            if (!input) {
+                alert("Escreve uma pergunta para o oráculo responder!");
                 return;
             }
 
-            // Escolhe uma fofoca aleatória da lista
-            const fofocaAleatoria = fofocas[Math.floor(Math.random() * fofocas.length)];
-            ultimoResultado = `⚠️ Segredo revelado sobre ${nome}: ${fofocaAleatoria}`;
+            perguntaAtual = input;
+            // Escolhe uma resposta aleatória
+            respostaAtual = respostasOraculo[Math.floor(Math.random() * respostasOraculo.length)];
 
-            document.getElementById('fofoca-text').innerText = ultimoResultado;
+            document.getElementById('displayed-question').innerText = `"${perguntaAtual}"`;
+            document.getElementById('oraculo-answer').innerText = respostaAtual;
+            
             document.getElementById('screen-home').classList.add('hidden');
             document.getElementById('screen-result').classList.remove('hidden');
         }
 
         function partilharWhatsApp() {
-            const mensagem = encodeURIComponent(`Olha o que descobri no Fofômetro Secreto! 😂\n\n${ultimoResultado}\n\nClica aqui para descobrir o teu: ` + window.location.href);
-            window.open(`https://api.whatsapp.com/send?text=${mensagem}`, '_blank');
+            const texto = encodeURIComponent(`Fiz uma pergunta ao Oráculo da Zoeira:\n❓ "${perguntaAtual}"\n\n🔮 Resposta: ${respostaAtual}\n\nClica aqui para consultar o teu futuro: ` + window.location.href);
+            window.open(`https://api.whatsapp.com/send?text=${texto}`, '_blank');
         }
 
         function voltarInicio() {
-            document.getElementById('username').value = "";
+            document.getElementById('userQuestion').value = "";
             document.getElementById('screen-result').classList.add('hidden');
             document.getElementById('screen-home').classList.remove('hidden');
         }
