@@ -272,7 +272,6 @@
     </div>
 
     <script>
-        // Lista com vídeos ultra-estáveis (hospedados em servidores globais seguros)
         const achadinhos = [
             {
                 id: 1,
@@ -325,10 +324,11 @@
                 card.className = 'video-card';
                 card.dataset.id = item.id;
                 
+                // Duplo clique para curtir
                 card.ondblclick = (e) => criarCoracaoFlutuante(e, card);
                 
                 card.innerHTML = `
-                    <video src="${item.video}" autoplay loop muted playsinline preload="auto" id="vid-${index}"></video>
+                    <video src="${item.video}" loop muted playsinline preload="metadata" id="vid-${index}"></video>
                     
                     <div class="sidebar">
                         <div class="action-icon" id="likeBtn-${item.id}" onclick="curtir(${item.id})">
@@ -358,11 +358,27 @@
                 feedEl.appendChild(card);
                 const vidEl = document.getElementById(`vid-${index}`);
                 videosCriados.push(vidEl);
-                
-                // Força o play no carregamento para evitar bloqueios de autoplay do telemóvel
-                vidEl.play().catch(error => {
-                    console.log("Autoplay prevenido pelo browser, tocando no toque.");
+            });
+
+            // Intersection Observer: Reproduz APENAS o vídeo que estiver visível na tela
+            const observerOptions = {
+                root: feedEl,
+                threshold: 0.5
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const video = entry.target.querySelector('video');
+                    if (entry.isIntersecting) {
+                        video.play().catch(err => console.log("Aguardando interação"));
+                    } else {
+                        video.pause();
+                    }
                 });
+            }, observerOptions);
+
+            document.querySelectorAll('.video-card').forEach(card => {
+                observer.observe(card);
             });
         }
 
