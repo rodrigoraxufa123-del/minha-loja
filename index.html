@@ -2,364 +2,225 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Arcade - Portal de Mini-Games</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cyber Snake - Advanced</title>
     <style>
-        :root {
-            --bg-color: #0b0f19;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --primary: #8b5cf6;
-            --primary-hover: #7c3aed;
-            --accent: #06b6d4;
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            touch-action: manipulation; /* Evita zoom duplo no celular */
         }
 
         body {
-            background-color: var(--bg-color);
-            background-image: radial-gradient(circle at 50% 10%, #1e1b4b 0%, var(--bg-color) 70%);
-            color: var(--text);
-            min-height: 100vh;
+            background-color: #0b0f19;
+            background-image: radial-gradient(circle at 50% 50%, #1a1525 0%, #0b0f19 80%);
+            color: #fff;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
         }
 
         header {
             text-align: center;
-            margin-bottom: 30px;
-        }
-
-        h1 {
-            font-size: 2.8rem;
-            background: linear-gradient(to right, var(--accent), var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
-        }
-
-        header p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-        }
-
-        /* Menu de Seleção de Jogos */
-        .game-menu {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .menu-btn {
-            background-color: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text);
-            padding: 10px 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .menu-btn:hover, .menu-btn.active {
-            background-color: var(--primary);
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
-        }
-
-        /* Container dos Jogos */
-        .game-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            width: 100%;
-            max-width: 420px;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            display: none;
-            text-align: center;
-            animation: fadeIn 0.4s ease;
-        }
-
-        .game-card.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h2 {
-            color: var(--accent);
-            margin-bottom: 10px;
-        }
-
-        p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
             margin-bottom: 20px;
         }
 
-        /* Botões Gerais */
-        .action-btn {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            width: 100%;
-            margin-top: 15px;
-        }
-
-        .action-btn:active {
-            transform: scale(0.97);
-        }
-
-        .score-display {
+        h1 {
             font-size: 2.2rem;
-            color: #4ade80;
+            color: #06b6d4;
+            text-shadow: 0 0 10px #06b6d4;
+            letter-spacing: 2px;
+        }
+
+        .score-board {
+            font-size: 1.5rem;
+            color: #a855f7;
             font-weight: bold;
-            margin: 15px 0;
+            margin-top: 5px;
+            text-shadow: 0 0 10px #a855f7;
         }
 
-        /* Jogo da Velha Estilo */
-        .board {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin: 20px 0;
-        }
-
-        .cell {
-            background-color: rgba(255, 255, 255, 0.05);
-            aspect-ratio: 1;
+        /* O Canvas onde o jogo é renderizado */
+        canvas {
+            background-color: #0f172a;
+            border: 2px solid #334155;
             border-radius: 10px;
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.2);
+            display: block;
+        }
+
+        /* Controles Virtuais para Celular */
+        .controls {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(3, 60px);
+            grid-template-rows: repeat(2, 60px);
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+            color: white;
+            font-size: 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            font-weight: bold;
             cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: background 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: background 0.1s;
         }
 
-        .cell:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+        .btn:active {
+            background: #06b6d4;
+            box-shadow: 0 0 15px #06b6d4;
+            transform: scale(0.95);
         }
 
-        /* Adivinhe o Número */
-        input[type="number"] {
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.2);
-            color: white;
-            font-size: 1.1rem;
-            text-align: center;
-            margin-bottom: 15px;
-        }
+        .up { grid-column: 2; grid-row: 1; }
+        .left { grid-column: 1; grid-row: 2; }
+        .down { grid-column: 2; grid-row: 2; }
+        .right { grid-column: 3; grid-row: 2; }
 
-        footer {
-            margin-top: 40px;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>⚡ NEXUS ARCADE</h1>
-        <p>Escolha um jogo e divirta-se diretamente pelo navegador!</p>
+        <h1>CYBER SNAKE</h1>
+        <div class="score-board">Pontos: <span id="score">0</span></div>
     </header>
 
-    <!-- Menu de Abas -->
-    <div class="game-menu">
-        <button class="menu-btn active" onclick="trocarJogo('clicker', this)">🎮 Clique Rápido</button>
-        <button class="menu-btn" onclick="trocarJogo('velha', this)">❌ Jogo da Velha</button>
-        <button class="menu-btn" onclick="trocarJogo('adivinha', this)">🎯 Adivinhe</button>
-    </div>
+    <!-- Área Gráfica do Jogo -->
+    <canvas id="gameCanvas" width="300" height="300"></canvas>
 
-    <!-- Jogo 1: Clique Rápido -->
-    <div id="clicker" class="game-card active">
-        <h2>Clique Rápido</h2>
-        <p>Quantos cliques você consegue fazer em 10 segundos?</p>
-        <div class="score-display" id="clickScore">0</div>
-        <button class="action-btn" id="clickBtn" onclick="contarClique()">CLIQUE AQUI!</button>
-        <p id="clickTimer" style="margin-top: 15px;">Pronto para começar</p>
+    <!-- Direcionais para Mobile -->
+    <div class="controls">
+        <div class="btn up" onclick="setDirection('UP')">⬆️</div>
+        <div class="btn left" onclick="setDirection('LEFT')">⬅️</div>
+        <div class="btn down" onclick="setDirection('DOWN')">⬇️</div>
+        <div class="btn right" onclick="setDirection('RIGHT')">➡️</div>
     </div>
-
-    <!-- Jogo 2: Jogo da Velha -->
-    <div id="velha" class="game-card">
-        <h2>Jogo da Velha</h2>
-        <p>Jogue com um amigo no mesmo aparelho. Vez do: <span id="turno" style="color:var(--accent)">X</span></p>
-        <div class="board" id="board">
-            <div class="cell" onclick="jogarVelha(0)"></div>
-            <div class="cell" onclick="jogarVelha(1)"></div>
-            <div class="cell" onclick="jogarVelha(2)"></div>
-            <div class="cell" onclick="jogarVelha(3)"></div>
-            <div class="cell" onclick="jogarVelha(4)"></div>
-            <div class="cell" onclick="jogarVelha(5)"></div>
-            <div class="cell" onclick="jogarVelha(6)"></div>
-            <div class="cell" onclick="jogarVelha(7)"></div>
-            <div class="cell" onclick="jogarVelha(8)"></div>
-        </div>
-        <button class="action-btn" onclick="reiniciarVelha()">Reiniciar Jogo</button>
-    </div>
-
-    <!-- Jogo 3: Adivinhe o Número -->
-    <div id="adivinha" class="game-card">
-        <h2>Adivinhe o Número</h2>
-        <p>Tente adivinhar o número secreto entre 1 e 50!</p>
-        <input type="number" id="palpite" placeholder="Digite seu palpite" min="1" max="50">
-        <button class="action-btn" onclick="verificarPalpite()">Enviar Palpite</button>
-        <p id="dicaAdivinha" style="margin-top: 15px;">Boa sorte!</p>
-    </div>
-
-    <footer>
-        Criado com GitHub & Termux • 2026
-    </footer>
 
     <script>
-        // Sistema de Troca de Abas
-        function trocarJogo(idDoJogo, elemento) {
-            document.querySelectorAll('.game-card').forEach(card => card.classList.remove('active'));
-            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(idDoJogo).classList.add('active');
-            elemento.classList.add('active');
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Configurações da grade
+        const box = 15; // Tamanho de cada quadrado
+        const canvasSize = 300;
+        const totalBoxes = canvasSize / box;
+
+        let snake = [];
+        snake[0] = { x: 10 * box, y: 10 * box }; // Posição inicial
+
+        let food = {
+            x: Math.floor(Math.random() * totalBoxes) * box,
+            y: Math.floor(Math.random() * totalBoxes) * box
+        };
+
+        let score = 0;
+        let d = "RIGHT"; // Direção inicial
+        let gameLoop;
+        let velocidade = 120;
+
+        // Função para receber controles da tela (Touch)
+        function setDirection(newDir) {
+            if (newDir === "LEFT" && d !== "RIGHT") d = "LEFT";
+            else if (newDir === "UP" && d !== "DOWN") d = "UP";
+            else if (newDir === "RIGHT" && d !== "LEFT") d = "RIGHT";
+            else if (newDir === "DOWN" && d !== "UP") d = "DOWN";
         }
 
-        // Lógica Jogo 1: Clique Rápido
-        let cliques = 0;
-        let tempoRestante = 10;
-        let jogando = false;
-        let timerClick;
+        // Função para receber controles do teclado (Computador)
+        document.addEventListener("keydown", (event) => {
+            let key = event.keyCode;
+            if (key == 37 && d !== "RIGHT") d = "LEFT";
+            else if (key == 38 && d !== "DOWN") d = "UP";
+            else if (key == 39 && d !== "LEFT") d = "RIGHT";
+            else if (key == 40 && d !== "UP") d = "DOWN";
+        });
 
-        function contarClique() {
-            if (!jogando) {
-                iniciarClicker();
+        // Detecta colisão com o próprio corpo
+        function collision(head, array) {
+            for (let i = 0; i < array.length; i++) {
+                if (head.x === array[i].x && head.y === array[i].y) {
+                    return true;
+                }
             }
-            cliques++;
-            document.getElementById('clickScore').innerText = cliques;
+            return false;
         }
 
-        function iniciarClicker() {
-            jogando = true;
-            cliques = 0;
-            tempoRestante = 10;
-            document.getElementById('clickScore').innerText = cliques;
+        // Motor de Renderização e Lógica (Atualiza a cada frame)
+        function draw() {
+            // Limpa o canvas
+            ctx.fillStyle = "#0f172a";
+            ctx.fillRect(0, 0, canvasSize, canvasSize);
+
+            // Desenha a cobra
+            for (let i = 0; i < snake.length; i++) {
+                ctx.fillStyle = (i === 0) ? "#06b6d4" : "#3b82f6"; // Cabeça ciano, corpo azul
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = (i === 0) ? "#06b6d4" : "transparent"; // Brilho só na cabeça
+                ctx.fillRect(snake[i].x, snake[i].y, box - 1, box - 1);
+            }
+
+            // Desenha a comida
+            ctx.fillStyle = "#ec4899"; // Rosa Neon
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = "#ec4899";
+            ctx.fillRect(food.x, food.y, box - 1, box - 1);
             
-            timerClick = setInterval(() => {
-                tempoRestante--;
-                document.getElementById('clickTimer').innerText = "Tempo restante: " + tempoRestante + "s";
+            // Reseta o brilho para não bugar o resto
+            ctx.shadowBlur = 0; 
+
+            // Posição atual da cabeça
+            let snakeX = snake[0].x;
+            let snakeY = snake[0].y;
+
+            // Movimentação
+            if (d === "LEFT") snakeX -= box;
+            if (d === "UP") snakeY -= box;
+            if (d === "RIGHT") snakeX += box;
+            if (d === "DOWN") snakeY += box;
+
+            // Se comer a comida
+            if (snakeX === food.x && snakeY === food.y) {
+                score += 10;
+                document.getElementById("score").innerText = score;
                 
-                if (tempoRestante <= 0) {
-                    clearInterval(timerClick);
-                    jogando = false;
-                    alert("Tempo esgotado! Você fez " + cliques + " pontos!");
-                    document.getElementById('clickTimer').innerText = "Fim de jogo! Clique para reiniciar.";
-                }
-            }, 1000);
-        }
-
-        // Lógica Jogo 2: Jogo da Velha
-        let tabuleiro = ['', '', '', '', '', '', '', '', ''];
-        let jogadorAtual = 'X';
-        let jogoAtivo = true;
-
-        function jogarVelha(index) {
-            if (tabuleiro[index] === '' && jogoAtivo) {
-                tabuleiro[index] = jogadorAtual;
-                document.getElementsByClassName('cell')[index].innerText = jogadorAtual;
-                
-                checarVitoriaVelha();
-            }
-        }
-
-        function checarVitoriaVelha() {
-            const condicoesVitoria = [
-                [0,1,2], [3,4,5], [6,7,8],
-                [0,3,6], [1,4,7], [2,5,8],
-                [0,4,8], [2,4,6]
-            ];
-
-            let rodadaVencida = false;
-            for (let condicao of condicoesVitoria) {
-                let a = tabuleiro[condicao[0]];
-                let b = tabuleiro[condicao[1]];
-                let c = tabuleiro[condicao[2]];
-                if (a === '' || b === '' || c === '') continue;
-                if (a === b && b === c) {
-                    rodadaVencida = true;
-                    break;
-                }
-            }
-
-            if (rodadaVencida) {
-                alert("O jogador " + jogadorAtual + " venceu!");
-                jogoAtivo = false;
-                return;
-            }
-
-            if (!tabuleiro.includes('')) {
-                alert("Empate!");
-                jogoAtivo = false;
-                return;
-            }
-
-            jogadorAtual = jogadorAtual === 'X' ? 'O' : 'X';
-            document.getElementById('turno').innerText = jogadorAtual;
-        }
-
-        function reiniciarVelha() {
-            tabuleiro = ['', '', '', '', '', '', '', '', ''];
-            jogadorAtual = 'X';
-            jogoAtivo = true;
-            document.getElementById('turno').innerText = jogadorAtual;
-            let cells = document.getElementsByClassName('cell');
-            for (let cell of cells) {
-                cell.innerText = '';
-            }
-        }
-
-        // Lógica Jogo 3: Adivinhe o Número
-        let numeroSecreto = Math.floor(Math.random() * 50) + 1;
-        function verificarPalpite() {
-            let palpite = parseInt(document.getElementById('palpite').value);
-            let dica = document.getElementById('dicaAdivinha');
-
-            if (isNaN(palpite)) {
-                dica.innerText = "Digite um número válido!";
-                return;
-            }
-
-            if (palpite === numeroSecreto) {
-                dica.innerText = "🎉 Parabéns! Você acertou o número secreto (" + numeroSecreto + ")!";
-                numeroSecreto = Math.floor(Math.random() * 50) + 1; // Reinicia com outro número
-            } else if (palpite < numeroSecreto) {
-                dica.innerText = "📈 O número secreto é MAIOR que " + palpite;
+                // Gera nova comida
+                food = {
+                    x: Math.floor(Math.random() * totalBoxes) * box,
+                    y: Math.floor(Math.random() * totalBoxes) * box
+                };
             } else {
-                dica.innerText = "📉 O número secreto é MENOR que " + palpite;
+                // Remove o último pedaço da cauda se não comeu
+                snake.pop(); 
             }
+
+            let newHead = { x: snakeX, y: snakeY };
+
+            // Regras de Game Over (Bater na parede ou no corpo)
+            if (snakeX < 0 || snakeX >= canvasSize || snakeY < 0 || snakeY >= canvasSize || collision(newHead, snake)) {
+                clearInterval(gameLoop);
+                alert("GAME OVER! Sua pontuação: " + score);
+                location.reload(); // Reinicia o jogo
+            }
+
+            // Adiciona a nova cabeça
+            snake.unshift(newHead);
         }
+
+        // Inicia o loop do jogo
+        gameLoop = setInterval(draw, velocidade);
     </script>
 </body>
 </html>
