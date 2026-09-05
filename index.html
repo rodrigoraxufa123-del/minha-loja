@@ -3,17 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Time Machine - Viaje no Tempo ⏳</title>
+    <title>Achadinhos Feed 🛍️ Shopee & ML</title>
     <style>
-        :root {
-            --bg-color: #07090e;
-            --card-bg: #111827;
-            --primary: #38bdf8;
-            --accent: #f43f5e;
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -21,277 +12,177 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        body {
-            background-color: var(--bg-color);
-            background-image: radial-gradient(circle at 50% 20%, #1e1b4b 0%, var(--bg-color) 70%);
-            color: var(--text);
-            min-height: 100vh;
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        /* Feed estilo TikTok / Reels */
+        .feed-container {
+            width: 100%;
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        .reel-card {
+            width: 100%;
+            height: 100vh;
+            scroll-snap-align: start;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            background: #111;
+        }
+
+        /* Vídeo de Fundo */
+        .reel-card video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        /* Sombra gradiente para destacar o texto */
+        .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60%;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.4), transparent);
+            z-index: 2;
+            padding: 25px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            justify-content: flex-end;
         }
 
-        .container {
-            width: 100%;
-            max-width: 420px;
-            background: rgba(17, 24, 39, 0.9);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 25px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 1.7rem;
-            color: var(--primary);
-            margin-bottom: 5px;
-        }
-
-        p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.4);
+        .product-tag {
+            background: #ff5722;
             color: white;
-            font-size: 1.05rem;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        /* Seleção de Idade */
-        .age-selector {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .age-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: white;
-            padding: 12px;
-            border-radius: 12px;
-            cursor: pointer;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
             font-weight: bold;
-            transition: all 0.2s;
+            width: fit-content;
+            margin-bottom: 8px;
+            text-transform: uppercase;
         }
 
-        .age-btn.selected {
-            background: var(--primary);
-            color: #000;
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        .product-title {
+            font-size: 1.15rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            line-height: 1.3;
         }
 
-        /* Botão Personalizado de Upload de Foto */
-        .upload-label {
-            display: block;
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px dashed rgba(255, 255, 255, 0.2);
-            padding: 15px;
-            border-radius: 12px;
-            color: var(--text-muted);
-            cursor: pointer;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            transition: border-color 0.2s;
+        .product-price {
+            font-size: 1.3rem;
+            color: #4ade80;
+            font-weight: bold;
+            margin-bottom: 15px;
         }
 
-        .upload-label:hover {
-            border-color: var(--primary);
-            color: #fff;
-        }
-
-        input[type="file"] {
-            display: none;
-        }
-
-        .action-btn {
-            background: linear-gradient(135deg, var(--primary), #0284c7);
+        /* Botão de Compra Afiliado */
+        .buy-btn {
+            background: linear-gradient(135deg, #ff5722, #ff784e);
             color: white;
             border: none;
-            padding: 14px 25px;
-            font-size: 1.05rem;
+            padding: 14px;
+            font-size: 1rem;
             font-weight: bold;
-            border-radius: 12px;
+            border-radius: 14px;
             cursor: pointer;
             width: 100%;
-            transition: transform 0.1s, opacity 0.2s;
-            box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 10px 20px rgba(255, 87, 34, 0.4);
+            display: block;
+            transition: transform 0.1s;
         }
 
-        .action-btn:active {
+        .buy-btn:active {
             transform: scale(0.98);
         }
 
-        .whatsapp-btn {
-            background-color: #25d366;
-            margin-top: 15px;
-            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
-        }
-
-        /* Caixa de Resultado */
-        .result-card {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 20px;
-            border-radius: 16px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .avatar-preview {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 10px auto;
-            border: 3px solid var(--primary);
-            display: block;
-            background: #222;
-        }
-
-        .report-text {
-            text-align: left;
-            font-size: 0.9rem;
-            color: #e2e8f0;
-            line-height: 1.4;
-            margin-top: 15px;
-            background: rgba(0,0,0,0.3);
-            padding: 12px;
-            border-radius: 10px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        footer {
-            margin-top: 20px;
-            color: var(--text-muted);
+        /* Indicador de deslizar para cima */
+        .swipe-hint {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            padding: 6px 12px;
+            border-radius: 20px;
             font-size: 0.75rem;
+            z-index: 3;
+            color: #cbd5e1;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- ECRÃ 1: Dados e Escolha -->
-        <div id="screen-form">
-            <h1>⏳ Time Machine</h1>
-            <p>Descobre como vais estar no futuro sem burocracia!</p>
-
-            <input type="text" id="userName" placeholder="O teu nome...">
-
-            <p style="margin-bottom: 8px; text-align: left; font-size: 0.85rem;">Escolhe a idade do futuro:</p>
-            <div class="age-selector">
-                <button class="age-btn selected" onclick="escolherIdade(40, this)">40 Anos</button>
-                <button class="age-btn" onclick="escolherIdade(60, this)">60 Anos</button>
-                <button class="age-btn" onclick="escolherIdade(80, this)">80 Anos</button>
-            </div>
-
-            <label class="upload-label" for="userPhoto">
-                📷 Escolher Foto da Galeria (Opcional)
-            </label>
-            <input type="file" id="userPhoto" accept="image/*" onchange="mostrarNomeFoto(this)">
-
-            <button class="action-btn" onclick="viajarNoTempo()">Gerar Relatório do Futuro 🚀</button>
-        </div>
-
-        <!-- ECRÃ 2: Resultado -->
-        <div id="screen-result" class="hidden">
-            <h1>Cartão do Futuro 🔮</h1>
-            
-            <div class="result-card">
-                <img id="outputAvatar" class="avatar-preview" src="" alt="Avatar">
-                <h3 id="outputTitle" style="color: #fff; font-size: 1.2rem;">Nome</h3>
-                <p id="outputAge" style="color: var(--primary); font-size: 0.85rem; font-weight: bold;"></p>
-                
-                <div class="report-text" id="outputReport">
-                    A calcular linhas do tempo...
-                </div>
-            </div>
-
-            <button class="action-btn whatsapp-btn" onclick="partilharWhatsApp()">Partilhar no WhatsApp 💬</button>
-            <button class="action-btn" style="background: rgba(255,255,255,0.1); margin-top: 10px;" onclick="reiniciar()">Tentar Outro Nome 🔄</button>
-        </div>
+    <div class="feed-container" id="feed">
+        <!-- Os vídeos e produtos são gerados dinamicamente via JavaScript -->
     </div>
 
-    <footer>
-        Dani Time Apps • Hospedado no GitHub Pages
-    </footer>
-
     <script>
-        let idadeEscolhida = 40;
-        let imagemCarregada = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=300&auto=format&fit=crop"; // Padrão
-
-        function escolherIdade(idade, elemento) {
-            idadeEscolhida = idade;
-            document.querySelectorAll('.age-btn').forEach(btn => btn.classList.remove('selected'));
-            elemento.classList.add('selected');
-        }
-
-        function mostrarNomeFoto(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    imagemCarregada = e.target.result;
-                    document.querySelector('.upload-label').innerText = "✅ Foto carregada com sucesso!";
-                    document.querySelector('.upload-label').style.borderColor = "#22c55e";
-                }
-                reader.readAsDataURL(input.files[0]);
+        // Lista de produtos com vídeos curtos de demonstração e links de afiliado
+        const achadinhos = [
+            {
+                titulo: "Mini Lanterna de Chaveiro Ultra Potente 3 em 1",
+                preco: "R$ 19,90",
+                loja: "Shopee",
+                video: "https://assets.mixkit.co/videos/preview/mixkit-woman-holding-a-neon-light-42994-large.mp4",
+                link: "https://shopee.com.br" // Substitua pelo seu link de afiliado real
+            },
+            {
+                titulo: "Suporte Magnético para Celular Giratório 360º",
+                preco: "R$ 34,90",
+                loja: "Mercado Livre",
+                video: "https://assets.mixkit.co/videos/preview/mixkit-hands-holding-a-smartphone-with-a-green-screen-42998-large.mp4",
+                link: "https://mercadolivre.com.br" // Substitua pelo seu link de afiliado real
+            },
+            {
+                titulo: "Luminária de Mesa LED Touch Minimalista RGB",
+                preco: "R$ 49,90",
+                loja: "Shopee",
+                video: "https://assets.mixkit.co/videos/preview/mixkit-neon-lights-in-a-room-41554-large.mp4",
+                link: "https://shopee.com.br" // Substitua pelo seu link de afiliado real
             }
+        ];
+
+        const feedEl = document.getElementById('feed');
+
+        function carregarFeed() {
+            achadinhosforEach = achadinhos.forEach((item, index) => {
+                const reel = document.createElement('div');
+                reel.className = 'reel-card';
+                
+                reel.innerHTML = `
+                    <div class="swipe-hint">Deslize ↕ (${index + 1}/${achadinhos.length})</div>
+                    <video src="${item.video}" autoplay loop muted playsinline></video>
+                    <div class="overlay">
+                        <span class="product-tag">🔥 Achadinho da ${item.loja}</span>
+                        <div class="product-title">${item.titulo}</div>
+                        <div class="product-price">${item.preco}</div>
+                        <a href="${item.link}" target="_blank" class="buy-btn">Ver na ${item.loja} 🛒</a>
+                    </div>
+                `;
+                feedEl.appendChild(reel);
+            });
         }
 
-        function viajarNoTempo() {
-            const nome = document.getElementById('userName').value.trim();
-            if (!nome) {
-                alert("Por favor, escreve o teu nome!");
-                return;
-            }
-
-            // Preenche os dados do resultado
-            document.getElementById('outputAvatar').src = imagemCarregada;
-            document.getElementById('outputTitle').innerText = nome;
-            document.getElementById('outputAge').innerText = `Previsão Oficial para os ${idadeEscolhida} Anos`;
-
-            let relatorio = "";
-            if (idadeEscolhida === 40) {
-                relatorio = `💼 **Status aos 40:** Estável, a pagar contas a tempo, com uma cafeteira profissional em casa e a reclamar de dores na coluna quando dorme mal.`;
-            } else if (idadeEscolhida === 60) {
-                relatorio = `🏖️ **Status aos 60:** Chefe da família! Especialista em dar conselhos que ninguém pediu, mestre em regatear preços e dono de histórias épicas.`;
-            } else {
-                relatorio = `👑 **Status aos 80:** Lenda viva! Viciado em novelas, dono de todas as piadas secas da família e com passe VIP para reclamar de tudo.`;
-            }
-
-            document.getElementById('outputReport').innerHTML = relatorio;
-
-            // Muda de ecrã sem pedir permissões
-            document.getElementById('screen-form').classList.add('hidden');
-            document.getElementById('screen-result').classList.remove('hidden');
-        }
-
-        function partilharWhatsApp() {
-            const nome = document.getElementById('userName').innerText;
-            const texto = encodeURIComponent(`Descobri como o(a) ${nome} vai estar aos ${idadeEscolhida} anos! 😂 Vê o relatório do futuro aqui: ` + window.location.href);
-            window.open(`https://api.whatsapp.com/send?text=${texto}`, '_blank');
-        }
-
-        function reiniciar() {
-            window.location.reload();
-        }
+        carregarFeed();
     </script>
 </body>
 </html>
