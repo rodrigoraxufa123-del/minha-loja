@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dani Games - Portal</title>
+    <title>Dani Games - Premium</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --primary: #3b82f6;
+            --bg-color: #050b14;
+            --card-bg: #111827;
+            --primary: #f59e0b;
             --text: #f8fafc;
         }
 
@@ -23,58 +23,67 @@
         /* --- TELA DO PORTAL --- */
         #portal-screen {
             padding: 20px;
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
         header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
-        header h1 { font-size: 2.5rem; color: #38bdf8; text-transform: uppercase; letter-spacing: 2px;}
-        header p { color: #94a3b8; }
+        header h1 { font-size: 2.8rem; color: var(--primary); text-transform: uppercase; letter-spacing: 2px;}
+        header p { color: #94a3b8; font-size: 1.1rem; margin-top: 5px;}
 
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
         }
 
         .game-card {
             background-color: var(--card-bg);
             border-radius: 15px;
-            padding: 20px;
+            padding: 0;
             text-align: center;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255,255,255,0.05);
+            overflow: hidden;
         }
 
         .game-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(56, 189, 248, 0.2);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(245, 158, 11, 0.3);
             border-color: var(--primary);
         }
 
-        .icon { font-size: 4rem; margin-bottom: 10px; }
-        .game-title { font-size: 1.5rem; margin-bottom: 5px; color: #fff;}
-        .game-desc { font-size: 0.9rem; color: #94a3b8; }
+        .game-banner {
+            width: 100%;
+            height: 160px;
+            background-size: cover;
+            background-position: center;
+        }
 
-        /* --- TELA DE JOGO ATIVO --- */
+        .banner-shooter { background-image: url('https://img.gamedistribution.com/23eb5df18cc347bb83cc0486c8f42c26-512x512.jpeg'); }
+        .banner-moto { background-image: url('https://img.gamedistribution.com/214a1a6775f042ee85c138f61561f5f9-512x512.jpeg'); }
+
+        .game-info { padding: 20px; }
+        .game-title { font-size: 1.5rem; margin-bottom: 5px; color: #fff;}
+        .game-desc { font-size: 0.95rem; color: #94a3b8; }
+
+        /* --- TELA DE JOGO ATIVO (IFRAME) --- */
         #active-game-screen {
             display: none;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
+            width: 100vw;
+            height: 100vh;
             background-color: #000;
         }
 
         .nav-bar {
             width: 100%;
-            padding: 15px;
+            height: 60px;
             background: #111;
-            position: fixed;
-            top: 0; left: 0;
             display: flex;
-            justify-content: flex-start;
+            align-items: center;
+            padding: 0 20px;
             z-index: 10;
         }
 
@@ -83,239 +92,71 @@
             border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1rem;
         }
 
-        .game-container { margin-top: 60px; text-align: center; width: 100%; max-width: 400px; padding: 20px;}
+        .iframe-container {
+            flex-grow: 1;
+            width: 100%;
+            height: calc(100vh - 60px);
+        }
 
-        canvas { background: #87CEEB; border-radius: 10px; width: 100%; max-width: 400px; display: block; margin: 0 auto;}
-
-        /* Controles Moto */
-        .jump-btn { background: #38bdf8; color: white; width: 100%; padding: 20px; border: none; border-radius: 10px; font-size: 1.5rem; font-weight: bold; margin-top: 15px; cursor: pointer;}
-        
-        /* Layout RPG */
-        .rpg-arena { background: #27272a; padding: 20px; border-radius: 10px; border: 2px solid #52525b; }
-        .status-box { display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: bold;}
-        .hp-bar { color: #22c55e; }
-        .enemy-hp { color: #ef4444; }
-        .action-btns { display: flex; gap: 10px; }
-        .rpg-btn { flex: 1; padding: 15px; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer;}
-        .atk { background: #ef4444; color: white;}
-        .heal { background: #22c55e; color: white;}
-        #rpg-log { margin-top: 20px; font-family: monospace; color: #a1a1aa; height: 60px; }
-
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
     </style>
 </head>
 <body>
 
     <div id="portal-screen">
         <header>
-            <h1>🎮 Dani Games</h1>
-            <p>Escolha seu destino e divirta-se!</p>
+            <h1>🔥 Dani Games PRO</h1>
+            <p>Os melhores jogos da internet em um só lugar.</p>
         </header>
 
         <div class="games-grid">
-            <div class="game-card" onclick="abrirJogo('moto')">
-                <div class="icon">🏍️</div>
-                <h2 class="game-title">MotoX Desert</h2>
-                <p class="game-desc">Pule os obstáculos e sobreviva no deserto.</p>
+            <div class="game-card" onclick="abrirJogo('https://html5.gamedistribution.com/23eb5df18cc347bb83cc0486c8f42c26/')">
+                <div class="game-banner banner-shooter"></div>
+                <div class="game-info">
+                    <h2 class="game-title">Sniper Clash 3D</h2>
+                    <p class="game-desc">Jogo de tiro multiplayer realista com personagens em 3D.</p>
+                </div>
             </div>
             
-            <div class="game-card" onclick="abrirJogo('rpg')">
-                <div class="icon">⚔️</div>
-                <h2 class="game-title">Mini RPG Epic</h2>
-                <p class="game-desc">Lute contra o Dragão em batalhas de turno.</p>
+            <div class="game-card" onclick="abrirJogo('https://html5.gamedistribution.com/214a1a6775f042ee85c138f61561f5f9/')">
+                <div class="game-banner banner-moto"></div>
+                <div class="game-info">
+                    <h2 class="game-title">Moto X3M</h2>
+                    <p class="game-desc">O melhor jogo de Motocross com física insana e obstáculos.</p>
+                </div>
             </div>
         </div>
     </div>
 
     <div id="active-game-screen">
         <div class="nav-bar">
-            <button class="back-btn" onclick="voltarPortal()">⬅ Voltar ao Portal</button>
+            <button class="back-btn" onclick="voltarPortal()">⬅ Voltar ao Site</button>
         </div>
-
-        <div id="game-moto" class="game-container" style="display:none;">
-            <h2 style="color:white; margin-bottom: 10px;">MotoX Desert</h2>
-            <p style="color:#aaa; margin-bottom:10px;">Pontos: <span id="moto-score">0</span></p>
-            <canvas id="motoCanvas" width="300" height="200"></canvas>
-            <button class="jump-btn" onclick="pularMoto()" id="btnPuloMoto">PULAR!</button>
-        </div>
-
-        <div id="game-rpg" class="game-container" style="display:none;">
-            <div class="rpg-arena">
-                <h2 style="color:#fbbf24; margin-bottom: 15px;">Batalha Épica</h2>
-                
-                <div class="status-box">
-                    <div>🧑 Cavaleiro<br><span class="hp-bar" id="hp-player">HP: 100</span></div>
-                    <div>🐉 Dragão<br><span class="enemy-hp" id="hp-enemy">HP: 150</span></div>
-                </div>
-
-                <div class="action-btns">
-                    <button class="rpg-btn atk" onclick="rpgAtacar()">⚔️ Atacar</button>
-                    <button class="rpg-btn heal" onclick="rpgCurar()">🧪 Curar</button>
-                </div>
-
-                <div id="rpg-log">O Dragão apareceu! O que você vai fazer?</div>
+        <div class="iframe-container" id="iframe-box">
             </div>
-        </div>
     </div>
 
     <script>
-        // --- CONTROLE DO PORTAL ---
-        function abrirJogo(jogo) {
+        function abrirJogo(urlDoJogo) {
+            // Esconde o portal e mostra a tela de jogo
             document.getElementById('portal-screen').style.display = 'none';
             document.getElementById('active-game-screen').style.display = 'flex';
             
-            document.getElementById('game-moto').style.display = 'none';
-            document.getElementById('game-rpg').style.display = 'none';
-
-            if(jogo === 'moto') {
-                document.getElementById('game-moto').style.display = 'block';
-                iniciarMoto();
-            } else if (jogo === 'rpg') {
-                document.getElementById('game-rpg').style.display = 'block';
-                iniciarRPG();
-            }
+            // Injeta o iframe com o jogo escolhido
+            document.getElementById('iframe-box').innerHTML = `<iframe src="${urlDoJogo}" allowfullscreen="true" scrolling="no"></iframe>`;
         }
 
         function voltarPortal() {
+            // Esconde a tela de jogo e volta para o portal
             document.getElementById('active-game-screen').style.display = 'none';
             document.getElementById('portal-screen').style.display = 'block';
-            pararMoto(); // Pausa o jogo da moto caso esteja rodando
-        }
-
-        // --- LÓGICA DO JOGO: MOTO X ---
-        const canvas = document.getElementById("motoCanvas");
-        const ctx = canvas.getContext("2d");
-        let motoLoop;
-        let motoY = 150, pulando = false, gravidade = 1.5;
-        let obstaculoX = 300, pontosMoto = 0, velocidadePista = 4;
-
-        function iniciarMoto() {
-            motoY = 150; obstaculoX = 300; pontosMoto = 0; pulando = false;
-            document.getElementById("moto-score").innerText = pontosMoto;
-            if(motoLoop) cancelAnimationFrame(motoLoop);
-            loopMoto();
-        }
-
-        function pararMoto() {
-            if(motoLoop) cancelAnimationFrame(motoLoop);
-        }
-
-        function pularMoto() {
-            if (!pulando) {
-                pulando = true;
-                let subida = setInterval(() => {
-                    motoY -= 5;
-                    if(motoY <= 50) { // Altura máxima do pulo
-                        clearInterval(subida);
-                        let descida = setInterval(() => {
-                            motoY += 5;
-                            if(motoY >= 150) { // Chão
-                                clearInterval(descida);
-                                pulando = false;
-                            }
-                        }, 20);
-                    }
-                }, 20);
-            }
-        }
-
-        function loopMoto() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Desenha o chão
-            ctx.fillStyle = "#d97706";
-            ctx.fillRect(0, 180, canvas.width, 20);
-
-            // Desenha a Moto (Bloco Azul)
-            ctx.fillStyle = "#2563eb";
-            ctx.fillRect(30, motoY, 30, 30);
-
-            // Desenha o Obstáculo (Cacto/Pedra Vermelha)
-            ctx.fillStyle = "#dc2626";
-            ctx.fillRect(obstaculoX, 150, 20, 30);
-
-            obstaculoX -= velocidadePista;
-
-            // Se passou do obstáculo
-            if (obstaculoX < 0) {
-                obstaculoX = 300;
-                pontosMoto += 10;
-                document.getElementById("moto-score").innerText = pontosMoto;
-                velocidadePista += 0.2; // Fica mais rápido
-            }
-
-            // Colisão
-            if (obstaculoX > 30 && obstaculoX < 60 && motoY > 120) {
-                alert("Bateu! Fim de jogo. Pontos: " + pontosMoto);
-                iniciarMoto();
-                return;
-            }
-
-            motoLoop = requestAnimationFrame(loopMoto);
-        }
-
-        // --- LÓGICA DO JOGO: RPG ---
-        let hpPlayer, hpEnemy, rpgAtivo;
-
-        function iniciarRPG() {
-            hpPlayer = 100;
-            hpEnemy = 150;
-            rpgAtivo = true;
-            atualizarTelaRPG();
-            document.getElementById("rpg-log").innerText = "O Dragão apareceu! O que você vai fazer?";
-        }
-
-        function atualizarTelaRPG() {
-            document.getElementById("hp-player").innerText = "HP: " + hpPlayer;
-            document.getElementById("hp-enemy").innerText = "HP: " + hpEnemy;
-        }
-
-        function rpgAtacar() {
-            if(!rpgAtivo) return;
-            
-            let dano = Math.floor(Math.random() * 15) + 10; // Dano entre 10 e 25
-            hpEnemy -= dano;
-            if(hpEnemy < 0) hpEnemy = 0;
-            
-            document.getElementById("rpg-log").innerText = "Você atacou e causou " + dano + " de dano!";
-            atualizarTelaRPG();
-
-            if (hpEnemy === 0) {
-                document.getElementById("rpg-log").innerText = "VITÓRIA! Você derrotou o dragão!";
-                rpgAtivo = false;
-            } else {
-                turnoDragao();
-            }
-        }
-
-        function rpgCurar() {
-            if(!rpgAtivo) return;
-
-            let cura = Math.floor(Math.random() * 20) + 15; // Cura entre 15 e 35
-            hpPlayer += cura;
-            if(hpPlayer > 100) hpPlayer = 100;
-
-            document.getElementById("rpg-log").innerText = "Você tomou uma poção e curou " + cura + " HP!";
-            atualizarTelaRPG();
-            turnoDragao();
-        }
-
-        function turnoDragao() {
-            if(!rpgAtivo) return;
-
-            setTimeout(() => {
-                let danoDragao = Math.floor(Math.random() * 20) + 5; // Dano entre 5 e 25
-                hpPlayer -= danoDragao;
-                if(hpPlayer < 0) hpPlayer = 0;
-
-                document.getElementById("rpg-log").innerText = "O Dragão cuspiu fogo e causou " + danoDragao + " de dano!";
-                atualizarTelaRPG();
-
-                if (hpPlayer === 0) {
-                    document.getElementById("rpg-log").innerText = "GAME OVER. O Dragão te transformou em churrasco.";
-                    rpgAtivo = false;
-                    setTimeout(iniciarRPG, 3000); // Reinicia após 3 segundos
-                }
-            }, 1000); // 1 segundo de atraso para o ataque do inimigo
+            // Remove o jogo para parar o som e economizar memória do celular
+            document.getElementById('iframe-box').innerHTML = '';
         }
     </script>
 </body>
