@@ -57,12 +57,24 @@
             margin-bottom: 20px;
         }
 
+        input[type="text"] {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            font-size: 1.05rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
         /* Seleção de Idade */
         .age-selector {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .age-btn {
@@ -83,23 +95,27 @@
             box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
         }
 
-        /* Área da Câmara */
-        .camera-box {
-            width: 100%;
-            aspect-ratio: 3/4;
-            background: #000;
-            border-radius: 16px;
-            overflow: hidden;
-            position: relative;
-            margin-bottom: 20px;
+        /* Botão Personalizado de Upload de Foto */
+        .upload-label {
+            display: block;
+            background: rgba(255, 255, 255, 0.05);
             border: 2px dashed rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 12px;
+            color: var(--text-muted);
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
         }
 
-        video, canvas {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
+        .upload-label:hover {
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        input[type="file"] {
+            display: none;
         }
 
         .action-btn {
@@ -126,16 +142,36 @@
             box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
         }
 
-        .report-box {
+        /* Caixa de Resultado */
+        .result-card {
             background: rgba(0, 0, 0, 0.4);
-            border: 1px dashed rgba(255, 255, 255, 0.2);
-            padding: 15px;
-            border-radius: 12px;
-            margin: 15px 0;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .avatar-preview {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 10px auto;
+            border: 3px solid var(--primary);
+            display: block;
+            background: #222;
+        }
+
+        .report-text {
             text-align: left;
             font-size: 0.9rem;
             color: #e2e8f0;
             line-height: 1.4;
+            margin-top: 15px;
+            background: rgba(0,0,0,0.3);
+            padding: 12px;
+            border-radius: 10px;
         }
 
         .hidden {
@@ -143,7 +179,7 @@
         }
 
         footer {
-            margin-top: 25px;
+            margin-top: 20px;
             color: var(--text-muted);
             font-size: 0.75rem;
         }
@@ -152,40 +188,44 @@
 <body>
 
     <div class="container">
-        <!-- ECRÃ 1: Configuração e Câmara -->
-        <div id="screen-camera">
+        <!-- ECRÃ 1: Dados e Escolha -->
+        <div id="screen-form">
             <h1>⏳ Time Machine</h1>
-            <p>Escolha para qual idade quer viajar:</p>
+            <p>Descobre como vais estar no futuro sem burocracia!</p>
 
+            <input type="text" id="userName" placeholder="O teu nome...">
+
+            <p style="margin-bottom: 8px; text-align: left; font-size: 0.85rem;">Escolhe a idade do futuro:</p>
             <div class="age-selector">
                 <button class="age-btn selected" onclick="escolherIdade(40, this)">40 Anos</button>
                 <button class="age-btn" onclick="escolherIdade(60, this)">60 Anos</button>
                 <button class="age-btn" onclick="escolherIdade(80, this)">80 Anos</button>
             </div>
 
-            <div class="camera-box">
-                <video id="webcam" autoplay playsinline></video>
-                <canvas id="photoCanvas" class="hidden"></canvas>
-            </div>
+            <label class="upload-label" for="userPhoto">
+                📷 Escolher Foto da Galeria (Opcional)
+            </label>
+            <input type="file" id="userPhoto" accept="image/*" onchange="mostrarNomeFoto(this)">
 
-            <button class="action-btn" onclick="tirarFoto()">Tirar Foto & Envelhecer 📸</button>
+            <button class="action-btn" onclick="viajarNoTempo()">Gerar Relatório do Futuro 🚀</button>
         </div>
 
         <!-- ECRÃ 2: Resultado -->
         <div id="screen-result" class="hidden">
-            <h1>Relatório do Futuro 🔮</h1>
-            <p id="target-age-label" style="color: var(--primary); font-weight: bold;"></p>
-
-            <div class="camera-box" style="margin-top: 15px;">
-                <canvas id="resultCanvas"></canvas>
-            </div>
-
-            <div class="report-box" id="futureReport">
-                A analisar linhas do tempo...
+            <h1>Cartão do Futuro 🔮</h1>
+            
+            <div class="result-card">
+                <img id="outputAvatar" class="avatar-preview" src="" alt="Avatar">
+                <h3 id="outputTitle" style="color: #fff; font-size: 1.2rem;">Nome</h3>
+                <p id="outputAge" style="color: var(--primary); font-size: 0.85rem; font-weight: bold;"></p>
+                
+                <div class="report-text" id="outputReport">
+                    A calcular linhas do tempo...
+                </div>
             </div>
 
             <button class="action-btn whatsapp-btn" onclick="partilharWhatsApp()">Partilhar no WhatsApp 💬</button>
-            <button class="action-btn" style="background: rgba(255,255,255,0.1); margin-top: 10px;" onclick="reiniciarMaquina()">Viajar Novamente 🔄</button>
+            <button class="action-btn" style="background: rgba(255,255,255,0.1); margin-top: 10px;" onclick="reiniciar()">Tentar Outro Nome 🔄</button>
         </div>
     </div>
 
@@ -195,21 +235,7 @@
 
     <script>
         let idadeEscolhida = 40;
-        let videoStream = null;
-
-        const video = document.getElementById('webcam');
-        const photoCanvas = document.getElementById('photoCanvas');
-        const resultCanvas = document.getElementById('resultCanvas');
-
-        // Iniciar a câmara frontal do telemóvel automaticamente
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
-            .then(stream => {
-                videoStream = stream;
-                video.srcObject = stream;
-            })
-            .catch(err => {
-                alert("Erro ao aceder à câmara. Certifique-se de permitir o acesso no navegador!");
-            });
+        let imagemCarregada = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=300&auto=format&fit=crop"; // Padrão
 
         function escolherIdade(idade, elemento) {
             idadeEscolhida = idade;
@@ -217,69 +243,53 @@
             elemento.classList.add('selected');
         }
 
-        function tirarFoto() {
-            const context = photoCanvas.getContext('2d');
-            photoCanvas.width = video.videoWidth || 300;
-            photoCanvas.height = video.videoHeight || 400;
-            
-            // Desenha a imagem atual da câmara no canvas oculto
-            context.drawImage(video, 0, 0, photoCanvas.width, photoCanvas.height);
+        function mostrarNomeFoto(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagemCarregada = e.target.result;
+                    document.querySelector('.upload-label').innerText = "✅ Foto carregada com sucesso!";
+                    document.querySelector('.upload-label').style.borderColor = "#22c55e";
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
 
-            // Processa o efeito visual de envelhecimento (Filtro futurista/sepia/contraste)
-            processarEfeitoEnvelhecimento(photoCanvas, resultCanvas, idadeEscolhida);
-
-            // Desliga a câmara para poupar bateria
-            if(videoStream) {
-                videoStream.getTracks().forEach(track => track.stop());
+        function viajarNoTempo() {
+            const nome = document.getElementById('userName').value.trim();
+            if (!nome) {
+                alert("Por favor, escreve o teu nome!");
+                return;
             }
 
-            // Gera relatório engraçado
-            gerarRelatorio(idadeEscolhida);
+            // Preenche os dados do resultado
+            document.getElementById('outputAvatar').src = imagemCarregada;
+            document.getElementById('outputTitle').innerText = nome;
+            document.getElementById('outputAge').innerText = `Previsão Oficial para os ${idadeEscolhida} Anos`;
 
-            // Muda de ecrã
-            document.getElementById('screen-camera').classList.add('hidden');
-            document.getElementById('screen-result').classList.remove('hidden');
-            document.getElementById('target-age-label').innerText = `Você aos ${idadeEscolhida} Anos de Idade`;
-        }
-
-        function processarEfeitoEnvelhecimento(origemCanvas, destinoCanvas, idade) {
-            const ctxDest = destinoCanvas.getContext('2d');
-            destinoCanvas.width = origemCanvas.width;
-            destinoCanvas.height = origemCanvas.height;
-
-            // Aplica filtros personalizados via Canvas baseados na idade escolhida
-            ctxDest.filter = idade === 80 ? 'sepia(80%) contrast(140%) grayscale(40%) blur(0.5px)' : 
-                             idade === 60 ? 'sepia(50%) contrast(120%)' : 'contrast(110%) saturate(80%)';
-            
-            ctxDest.drawImage(origemCanvas, 0, 0);
-
-            // Adiciona um carimbo visual de "Time Machine" na foto
-            ctxDest.filter = 'none';
-            ctxDest.fillStyle = 'rgba(0, 0, 0, 0.6)';
-            ctxDest.fillRect(10, destinoCanvas.height - 40, destinoCanvas.width - 20, 30);
-            ctxDest.fillStyle = '#38bdf8';
-            ctxDest.font = 'bold 16px sans-serif';
-            ctxDest.fillText(`TIME MACHINE - ${idade} ANOS`, 20, destinoCanvas.height - 20);
-        }
-
-        function gerarRelatorio(idade) {
             let relatorio = "";
-            if (idade === 40) {
-                relatorio = "💼 **Status aos 40:** Estável, com um carro financiado, a pagar boletos a tempo e a reclamar de dores nas costas ao levantar da cama.";
-            } else if (idade === 60) {
-                relatorio = "🏖️ **Status aos 60:** Chefe da família! Especialista em dar conselhos que ninguém pede, mestre em regatear preços e dono de um sorriso sábio.";
+            if (idadeEscolhida === 40) {
+                relatorio = `💼 **Status aos 40:** Estável, a pagar contas a tempo, com uma cafeteira profissional em casa e a reclamar de dores na coluna quando dorme mal.`;
+            } else if (idadeEscolhida === 60) {
+                relatorio = `🏖️ **Status aos 60:** Chefe da família! Especialista em dar conselhos que ninguém pediu, mestre em regatear preços e dono de histórias épicas.`;
             } else {
-                relatorio = "👑 **Status aos 80:** Lenda viva! Viciado em novelas, dono de todas as histórias malucas da família e com passe livre em qualquer fila.";
+                relatorio = `👑 **Status aos 80:** Lenda viva! Viciado em novelas, dono de todas as piadas secas da família e com passe VIP para reclamar de tudo.`;
             }
-            document.getElementById('futureReport').innerHTML = relatorio;
+
+            document.getElementById('outputReport').innerHTML = relatorio;
+
+            // Muda de ecrã sem pedir permissões
+            document.getElementById('screen-form').classList.add('hidden');
+            document.getElementById('screen-result').classList.remove('hidden');
         }
 
         function partilharWhatsApp() {
-            const texto = encodeURIComponent(`Viajei no tempo com a Time Machine e descobri como vou estar aos ${idadeEscolhida} anos! 😂 Clica aqui para testar a tua foto também: ` + window.location.href);
+            const nome = document.getElementById('userName').innerText;
+            const texto = encodeURIComponent(`Descobri como o(a) ${nome} vai estar aos ${idadeEscolhida} anos! 😂 Vê o relatório do futuro aqui: ` + window.location.href);
             window.open(`https://api.whatsapp.com/send?text=${texto}`, '_blank');
         }
 
-        function reiniciarMaquina() {
+        function reiniciar() {
             window.location.reload();
         }
     </script>
