@@ -20,7 +20,6 @@
             overflow: hidden;
         }
 
-        /* Feed estilo TikTok / Reels */
         .feed-container {
             width: 100%;
             height: 100vh;
@@ -40,7 +39,6 @@
             background: #111;
         }
 
-        /* Vídeo de Fundo */
         .reel-card video {
             position: absolute;
             top: 0;
@@ -51,14 +49,13 @@
             z-index: 1;
         }
 
-        /* Sombra gradiente para destacar o texto */
         .overlay {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 60%;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.4), transparent);
+            height: 65%;
+            background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.6), transparent);
             z-index: 2;
             padding: 25px;
             display: flex;
@@ -67,45 +64,45 @@
         }
 
         .product-tag {
-            background: #ff5722;
+            background: #ff3b30;
             color: white;
-            padding: 4px 10px;
-            border-radius: 6px;
+            padding: 5px 12px;
+            border-radius: 8px;
             font-size: 0.75rem;
             font-weight: bold;
             width: fit-content;
             margin-bottom: 8px;
             text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(255, 59, 48, 0.4);
         }
 
         .product-title {
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
             line-height: 1.3;
         }
 
         .product-price {
-            font-size: 1.3rem;
-            color: #4ade80;
+            font-size: 1.4rem;
+            color: #34c759;
             font-weight: bold;
             margin-bottom: 15px;
         }
 
-        /* Botão de Compra Afiliado */
         .buy-btn {
-            background: linear-gradient(135deg, #ff5722, #ff784e);
+            background: linear-gradient(135deg, #ff3b30, #ff9500);
             color: white;
             border: none;
-            padding: 14px;
-            font-size: 1rem;
+            padding: 15px;
+            font-size: 1.05rem;
             font-weight: bold;
             border-radius: 14px;
             cursor: pointer;
             width: 100%;
             text-align: center;
             text-decoration: none;
-            box-shadow: 0 10px 20px rgba(255, 87, 34, 0.4);
+            box-shadow: 0 10px 25px rgba(255, 59, 48, 0.4);
             display: block;
             transition: transform 0.1s;
         }
@@ -114,57 +111,69 @@
             transform: scale(0.98);
         }
 
-        /* Indicador de deslizar para cima */
         .swipe-hint {
             position: absolute;
             top: 20px;
             right: 20px;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(5px);
-            padding: 6px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
             font-size: 0.75rem;
             z-index: 3;
-            color: #cbd5e1;
+            color: #e2e8f0;
+            border: 1px solid rgba(255,255,255,0.1);
         }
     </style>
 </head>
 <body>
 
-    <div class="feed-container" id="feed">
-        <!-- Os vídeos e produtos são gerados dinamicamente via JavaScript -->
-    </div>
+    <div class="feed-container" id="feed"></div>
 
     <script>
-        // Lista de produtos com vídeos curtos de demonstração e links de afiliado
+        // Lista expandida de achadinhos com mais opções
         const achadinhos = [
             {
                 titulo: "Mini Lanterna de Chaveiro Ultra Potente 3 em 1",
                 preco: "R$ 19,90",
                 loja: "Shopee",
                 video: "https://assets.mixkit.co/videos/preview/mixkit-woman-holding-a-neon-light-42994-large.mp4",
-                link: "https://shopee.com.br" // Substitua pelo seu link de afiliado real
+                link: "https://shopee.com.br"
             },
             {
                 titulo: "Suporte Magnético para Celular Giratório 360º",
                 preco: "R$ 34,90",
                 loja: "Mercado Livre",
                 video: "https://assets.mixkit.co/videos/preview/mixkit-hands-holding-a-smartphone-with-a-green-screen-42998-large.mp4",
-                link: "https://mercadolivre.com.br" // Substitua pelo seu link de afiliado real
+                link: "https://mercadolivre.com.br"
             },
             {
                 titulo: "Luminária de Mesa LED Touch Minimalista RGB",
                 preco: "R$ 49,90",
                 loja: "Shopee",
                 video: "https://assets.mixkit.co/videos/preview/mixkit-neon-lights-in-a-room-41554-large.mp4",
-                link: "https://shopee.com.br" // Substitua pelo seu link de afiliado real
+                link: "https://shopee.com.br"
+            },
+            {
+                titulo: "Ring Light de Mesa com Suporte para Smartphone",
+                preco: "R$ 29,90",
+                loja: "Mercado Livre",
+                video: "https://assets.mixkit.co/videos/preview/mixkit-young-woman-recording-a-video-with-her-smartphone-41270-large.mp4",
+                link: "https://mercadolivre.com.br"
+            },
+            {
+                titulo: "Mini Impressora Térmica Portátil sem Tinta",
+                preco: "R$ 89,90",
+                loja: "Shopee",
+                video: "https://assets.mixkit.co/videos/preview/mixkit-person-using-a-smartphone-in-a-dark-room-42997-large.mp4",
+                link: "https://shopee.com.br"
             }
         ];
 
         const feedEl = document.getElementById('feed');
 
         function carregarFeed() {
-            achadinhosforEach = achadinhos.forEach((item, index) => {
+            achadinhos.forEach((item, index) => {
                 const reel = document.createElement('div');
                 reel.className = 'reel-card';
                 
