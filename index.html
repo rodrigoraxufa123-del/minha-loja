@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Arcade - Portal de Mini-Games</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --primary: #8b5cf6;
+            --primary-hover: #7c3aed;
+            --accent: #06b6d4;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 50% 10%, #1e1b4b 0%, var(--bg-color) 70%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(to right, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* Menu de Seleção de Jogos */
+        .game-menu {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .menu-btn {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .menu-btn:hover, .menu-btn.active {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+        }
+
+        /* Container dos Jogos */
+        .game-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 420px;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .game-card.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        /* Botões Gerais */
+        .action-btn {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .action-btn:active {
+            transform: scale(0.97);
+        }
+
+        .score-display {
+            font-size: 2.2rem;
+            color: #4ade80;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        /* Jogo da Velha Estilo */
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .cell {
+            background-color: rgba(255, 255, 255, 0.05);
+            aspect-ratio: 1;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background 0.2s;
+        }
+
+        .cell:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Adivinhe o Número */
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            margin-top: 40px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>⚡ NEXUS ARCADE</h1>
+        <p>Escolha um jogo e divirta-se diretamente pelo navegador!</p>
+    </header>
+
+    <!-- Menu de Abas -->
+    <div class="game-menu">
+        <button class="menu-btn active" onclick="trocarJogo('clicker', this)">🎮 Clique Rápido</button>
+        <button class="menu-btn" onclick="trocarJogo('velha', this)">❌ Jogo da Velha</button>
+        <button class="menu-btn" onclick="trocarJogo('adivinha', this)">🎯 Adivinhe</button>
+    </div>
+
+    <!-- Jogo 1: Clique Rápido -->
+    <div id="clicker" class="game-card active">
+        <h2>Clique Rápido</h2>
+        <p>Quantos cliques você consegue fazer em 10 segundos?</p>
+        <div class="score-display" id="clickScore">0</div>
+        <button class="action-btn" id="clickBtn" onclick="contarClique()">CLIQUE AQUI!</button>
+        <p id="clickTimer" style="margin-top: 15px;">Pronto para começar</p>
+    </div>
+
+    <!-- Jogo 2: Jogo da Velha -->
+    <div id="velha" class="game-card">
+        <h2>Jogo da Velha</h2>
+        <p>Jogue com um amigo no mesmo aparelho. Vez do: <span id="turno" style="color:var(--accent)">X</span></p>
+        <div class="board" id="board">
+            <div class="cell" onclick="jogarVelha(0)"></div>
+            <div class="cell" onclick="jogarVelha(1)"></div>
+            <div class="cell" onclick="jogarVelha(2)"></div>
+            <div class="cell" onclick="jogarVelha(3)"></div>
+            <div class="cell" onclick="jogarVelha(4)"></div>
+            <div class="cell" onclick="jogarVelha(5)"></div>
+            <div class="cell" onclick="jogarVelha(6)"></div>
+            <div class="cell" onclick="jogarVelha(7)"></div>
+            <div class="cell" onclick="jogarVelha(8)"></div>
+        </div>
+        <button class="action-btn" onclick="reiniciarVelha()">Reiniciar Jogo</button>
+    </div>
+
+    <!-- Jogo 3: Adivinhe o Número -->
+    <div id="adivinha" class="game-card">
+        <h2>Adivinhe o Número</h2>
+        <p>Tente adivinhar o número secreto entre 1 e 50!</p>
+        <input type="number" id="palpite" placeholder="Digite seu palpite" min="1" max="50">
+        <button class="action-btn" onclick="verificarPalpite()">Enviar Palpite</button>
+        <p id="dicaAdivinha" style="margin-top: 15px;">Boa sorte!</p>
+    </div>
+
+    <footer>
+        Criado com GitHub & Termux • 2026
+    </footer>
+
+    <script>
+        // Sistema de Troca de Abas
+        function trocarJogo(idDoJogo, elemento) {
+            document.querySelectorAll('.game-card').forEach(card => card.classList.remove('active'));
+            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(idDoJogo).classList.add('active');
+            elemento.classList.add('active');
+        }
+
+        // Lógica Jogo 1: Clique Rápido
+        let cliques = 0;
+        let tempoRestante = 10;
+        let jogando = false;
+        let timerClick;
+
+        function contarClique() {
+            if (!jogando) {
+                iniciarClicker();
+            }
+            cliques++;
+            document.getElementById('clickScore').innerText = cliques;
+        }
+
+        function iniciarClicker() {
+            jogando = true;
+            cliques = 0;
+            tempoRestante = 10;
+            document.getElementById('clickScore').innerText = cliques;
+            
+            timerClick = setInterval(() => {
+                tempoRestante--;
+                document.getElementById('clickTimer').innerText = "Tempo restante: " + tempoRestante + "s";
+                
+                if (tempoRestante <= 0) {
+                    clearInterval(timerClick);
+                    jogando = false;
+                    alert("Tempo esgotado! Você fez " + cliques + " pontos!");
+                    document.getElementById('clickTimer').innerText = "Fim de jogo! Clique para reiniciar.";
+                }
+            }, 1000);
+        }
+
+        // Lógica Jogo 2: Jogo da Velha
+        let tabuleiro = ['', '', '', '', '', '', '', '', ''];
+        let jogadorAtual = 'X';
+        let jogoAtivo = true;
+
+        function jogarVelha(index) {
+            if (tabuleiro[index] === '' && jogoAtivo) {
+                tabuleiro[index] = jogadorAtual;
+                document.getElementsByClassName('cell')[index].innerText = jogadorAtual;
+                
+                checarVitoriaVelha();
+            }
+        }
+
+        function checarVitoriaVelha() {
+            const condicoesVitoria = [
+                [0,1,2], [3,4,5], [6,7,8],
+                [0,3,6], [1,4,7], [2,5,8],
+                [0,4,8], [2,4,6]
+            ];
+
+            let rodadaVencida = false;
+            for (let condicao of condicoesVitoria) {
+                let a = tabuleiro[condicao[0]];
+                let b = tabuleiro[condicao[1]];
+                let c = tabuleiro[condicao[2]];
+                if (a === '' || b === '' || c === '') continue;
+                if (a === b && b === c) {
+                    rodadaVencida = true;
+                    break;
+                }
+            }
+
+            if (rodadaVencida) {
+                alert("O jogador " + jogadorAtual + " venceu!");
+                jogoAtivo = false;
+                return;
+            }
+
+            if (!tabuleiro.includes('')) {
+                alert("Empate!");
+                jogoAtivo = false;
+                return;
+            }
+
+            jogadorAtual = jogadorAtual === 'X' ? 'O' : 'X';
+            document.getElementById('turno').innerText = jogadorAtual;
+        }
+
+        function reiniciarVelha() {
+            tabuleiro = ['', '', '', '', '', '', '', '', ''];
+            jogadorAtual = 'X';
+            jogoAtivo = true;
+            document.getElementById('turno').innerText = jogadorAtual;
+            let cells = document.getElementsByClassName('cell');
+            for (let cell of cells) {
+                cell.innerText = '';
+            }
+        }
+
+        // Lógica Jogo 3: Adivinhe o Número
+        let numeroSecreto = Math.floor(Math.random() * 50) + 1;
+        function verificarPalpite() {
+            let palpite = parseInt(document.getElementById('palpite').value);
+            let dica = document.getElementById('dicaAdivinha');
+
+            if (isNaN(palpite)) {
+                dica.innerText = "Digite um número válido!";
+                return;
+            }
+
+            if (palpite === numeroSecreto) {
+                dica.innerText = "🎉 Parabéns! Você acertou o número secreto (" + numeroSecreto + ")!";
+                numeroSecreto = Math.floor(Math.random() * 50) + 1; // Reinicia com outro número
+            } else if (palpite < numeroSecreto) {
+                dica.innerText = "📈 O número secreto é MAIOR que " + palpite;
+            } else {
+                dica.innerText = "📉 O número secreto é MENOR que " + palpite;
+            }
+        }
+    </script>
+</body>
+</html>
