@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cine & Game Quiz - Descubra Seu Nível</title>
+    <title>Teste de Amizade Secreto</title>
     <style>
         :root {
-            --bg-color: #080c14;
-            --card-bg: #111827;
-            --primary: #8b5cf6;
-            --accent: #06b6d4;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --primary: ec4899;
+            --accent: #8b5cf6;
             --text: #f8fafc;
             --text-muted: #94a3b8;
         }
@@ -22,8 +22,8 @@
         }
 
         body {
-            background-color: var(--bg-color);
-            background-image: radial-gradient(circle at 50% 20%, #1e1b4b 0%, var(--bg-color) 70%);
+            background-color: #0f172a;
+            background-image: radial-gradient(circle at 50% 10%, #311042 0%, #0f172a 70%);
             color: var(--text);
             min-height: 100vh;
             display: flex;
@@ -35,47 +35,66 @@
 
         .container {
             width: 100%;
-            max-width: 450px;
-            background: var(--card-bg);
+            max-width: 420px;
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             text-align: center;
-            backdrop-filter: blur(10px);
         }
 
         h1 {
             font-size: 1.8rem;
-            background: linear-gradient(to right, var(--accent), var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #f472b6;
             margin-bottom: 10px;
         }
 
         p {
             color: var(--text-muted);
             font-size: 0.95rem;
-            margin-bottom: 25px;
-        }
-
-        /* Área do Quiz */
-        #quiz-box {
-            display: block;
-        }
-
-        .question-text {
-            font-size: 1.15rem;
-            font-weight: 600;
             margin-bottom: 20px;
-            color: #fff;
-            text-align: left;
         }
 
-        .options-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+
+        .action-btn:active {
+            transform: scale(0.98);
+        }
+
+        .share-box {
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            word-break: break-all;
+            font-size: 0.85rem;
+            color: #38bdf8;
+            margin: 15px 0;
+            border: 1px dashed rgba(255,255,255,0.2);
         }
 
         .option-btn {
@@ -86,44 +105,19 @@
             border-radius: 12px;
             cursor: pointer;
             font-size: 1rem;
+            width: 100%;
+            margin-bottom: 10px;
             text-align: left;
-            transition: all 0.2s ease;
+            transition: background 0.2s;
         }
 
         .option-btn:hover {
-            background-color: var(--primary);
-            border-color: var(--primary);
-            transform: translateX(3px);
+            background-color: #8b5cf6;
+            border-color: #8b5cf6;
         }
 
-        /* Tela de Resultado */
-        #result-box {
+        .hidden {
             display: none;
-        }
-
-        .score-display {
-            font-size: 2.5rem;
-            color: #4ade80;
-            font-weight: bold;
-            margin: 15px 0;
-        }
-
-        .action-btn {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 12px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 20px;
-            transition: opacity 0.2s;
-        }
-
-        .action-btn:hover {
-            opacity: 0.9;
         }
 
         footer {
@@ -135,122 +129,184 @@
 </head>
 <body>
 
-    <div class="container">
-        <!-- Tela de Perguntas -->
-        <div id="quiz-box">
-            <h1>🎬 Cine & Game Quiz</h1>
-            <p id="counter">Pergunta 1 de 4</p>
+    <div class="container" id="app">
+        <!-- TELA 1: Criar o Teste -->
+        <div id="screen-create">
+            <h1>💖 Teste de Amizade</h1>
+            <p>Descubra quem realmente te conhece bem! Crie seu teste abaixo:</p>
             
-            <div class="question-text" id="question">Carregando pergunta...</div>
+            <input type="text" id="creator-name" placeholder="Seu Nome (ex: Dani)">
+            <input type="text" id="q1" placeholder="Pergunta 1: Qual minha comida favorita?">
+            <input type="text" id="q1-ans" placeholder="Resposta certa da Pergunta 1">
             
-            <div class="options-grid" id="options">
-                <!-- As opções entram via JavaScript -->
-            </div>
+            <input type="text" id="q2" placeholder="Pergunta 2: Qual meu estilo de música?">
+            <input type="text" id="q2-ans" placeholder="Resposta certa da Pergunta 2">
+
+            <button class="action-btn" onclick="gerarLink()">Gerar Link para o WhatsApp 🚀</button>
         </div>
 
-        <!-- Tela de Resultado -->
-        <div id="result-box">
-            <h1>Fim do Quiz! 🎉</h1>
-            <p>Sua pontuação final foi:</p>
-            <div class="score-display" id="final-score">0/4</div>
-            <p id="result-msg">Você entende muito de cultura pop!</p>
-            <button class="action-btn" onclick="reiniciarQuiz()">Jogar Novamente 🔄</button>
+        <!-- TELA 2: Link Gerado para Compartilhar -->
+        <div id="screen-share" class="hidden">
+            <h1>Link Criado! 🎉</h1>
+            <p>Copie o link abaixo e mande nos grupos ou status do WhatsApp:</p>
+            <div class="share-box" id="generated-link">...</div>
+            <button class="action-btn" onclick="copiarLink()">Copiar Link 📋</button>
+            <button class="action-btn" style="background: #25d366;" onclick="enviarWhatsApp()">Mandar no WhatsApp 💬</button>
+        </div>
+
+        <!-- TELA 3: O Amigo Respondendo -->
+        <div id="screen-play" class="hidden">
+            <h1 id="play-title">Teste de Amizade</h1>
+            <p id="play-subtitle">Veja se você conhece bem essa pessoa!</p>
+            
+            <input type="text" id="player-name" placeholder="Digite seu nome para começar">
+            <button class="action-btn" onclick="iniciarJogoAmigo()">Começar Desafio ▶</button>
+        </div>
+
+        <!-- TELA 4: Perguntas do Amigo -->
+        <div id="screen-quiz" class="hidden">
+            <h2 id="question-text" style="margin-bottom: 20px; font-size: 1.1rem;">Pergunta</h2>
+            <div id="quiz-options"></div>
+        </div>
+
+        <!-- TELA 5: Resultado Final -->
+        <div id="screen-result" class="hidden">
+            <h1>Resultado Final 🏆</h1>
+            <div style="font-size: 2.5rem; color: #f472b6; font-weight: bold; margin: 15px 0;" id="score-text">0/2</div>
+            <p id="result-comment">Parabéns!</p>
+            <button class="action-btn" onclick="criarNovoTeste()">Criar o seu próprio teste 🔄</button>
         </div>
     </div>
 
     <footer>
-        Dani Entretenimento • Hospedado no GitHub Pages
+        Dani Social Apps • Hospedado no GitHub Pages
     </footer>
 
     <script>
-        const perguntas = [
-            {
-                pergunta: "Qual é o nome do encanador mais famoso dos videogames da Nintendo?",
-                opcoes: ["Sonic", "Mario", "Link", "Donkey Kong"],
-                correta: 1
-            },
-            {
-                pergunta: "Em qual trilogia de filmes aparece o personagem Darth Vader?",
-                opcoes: ["Harry Potter", "Senhor dos Anéis", "Star Wars", "Matrix"],
-                correta: 2
-            },
-            {
-                pergunta: "Qual estúdio criou os filmes de animação 'Toy Story' e 'Procurando Nemo'?",
-                opcoes: ["Pixar", "DreamWorks", "Disney Animation", "Illumination"],
-                correta: 0
-            },
-            {
-                pergunta: "No jogo Minecraft, qual bloco é essencial para construir um portal para o Nether?",
-                opcoes: ["Diamante", "Obsidiana", "Ouro", "Pedra Redonda"],
-                correta: 1
-            }
-        ];
+        let quizData = null;
+        let currentQuestion = 0;
+        let score = 0;
+        let playerName = "";
 
-        let perguntaAtual = 0;
-        let pontuacao = 0;
-
-        const questionEl = document.getElementById("question");
-        const optionsEl = document.getElementById("options");
-        const counterEl = document.getElementById("counter");
-        const quizBox = document.getElementById("quiz-box");
-        const resultBox = document.getElementById("result-box");
-        const finalScoreEl = document.getElementById("final-score");
-        const resultMsgEl = document.getElementById("result-msg");
-
-        function carregarPergunta() {
-            let q = perguntas[perguntaAtual];
-            counterEl.innerText = `Pergunta ${perguntaAtual + 1} de ${perguntas.length}`;
-            questionEl.innerText = q.pergunta;
+        // Verifica se o usuário abriu um link de teste de outra pessoa
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const dataParam = urlParams.get('data');
             
-            optionsEl.innerHTML = "";
-            q.opcoes.forEach((opcao, index) => {
-                let btn = document.createElement("button");
-                btn.className = "option-btn";
-                btn.innerText = opcao;
-                btn.onclick = () => selecionarResposta(index);
-                optionsEl.appendChild(btn);
-            });
-        }
+            if (dataParam) {
+                try {
+                    quizData = JSON.parse(atob(dataParam));
+                    document.getElementById('screen-create').classList.add('hidden');
+                    document.getElementById('screen-play').classList.remove('hidden');
+                    document.getElementById('play-title').innerText = `Teste sobre: ${quizData.name}`;
+                } catch(e) {
+                    alert("Link inválido!");
+                }
+            }
+        };
 
-        function selecionarResposta(indiceEscolhido) {
-            if (indiceEscolhido === perguntas[perguntaAtual].correta) {
-                pontuacao++;
+        function gerarLink() {
+            const name = document.getElementById('creator-name').value.trim();
+            const q1 = document.getElementById('q1').value.trim();
+            const q1Ans = document.getElementById('q1-ans').value.trim();
+            const q2 = document.getElementById('q2').value.trim();
+            const q2Ans = document.getElementById('q2-ans').value.trim();
+
+            if (!name || !q1 || !q1Ans || !q2 || !q2Ans) {
+                alert("Por favor, preencha todos os campos!");
+                return;
             }
 
-            perguntaAtual++;
+            const data = {
+                name: name,
+                questions: [
+                    { q: q1, ans: q1Ans },
+                    { q: q2, ans: q2Ans }
+                ]
+            };
 
-            if (perguntaAtual < perguntas.length) {
-                carregarPergunta();
+            // Codifica os dados em Base64 para caber na URL de forma limpa
+            const encodedData = btoa(encodeURIComponent(JSON.stringify(data)));
+            const fullLink = window.location.origin + window.location.pathname + "?data=" + encodedData;
+
+            document.getElementById('generated-link').innerText = fullLink;
+            document.getElementById('screen-create').classList.add('hidden');
+            document.getElementById('screen-share').classList.remove('hidden');
+        }
+
+        function copiarLink() {
+            const linkText = document.getElementById('generated-link').innerText;
+            navigator.clipboard.writeText(linkText);
+            alert("Link copiado com sucesso!");
+        }
+
+        function enviarWhatsApp() {
+            const linkText = document.getElementById('generated-link').innerText;
+            const msg = encodeURIComponent(`Opa! Fiz um teste de amizade para ver quem realmente me conhece. Clica aí pra ver se você acerta: ${linkText}`);
+            window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
+        }
+
+        function iniciarJogoAmigo() {
+            playerName = document.getElementById('player-name').value.trim();
+            if (!playerName) {
+                alert("Digite seu nome para continuar!");
+                return;
+            }
+            document.getElementById('screen-play').classList.add('hidden');
+            document.getElementById('screen-quiz').classList.remove('hidden');
+            carregarPerguntaAmigo();
+        }
+
+        function carregarPerguntaAmigo() {
+            if (currentQuestion < quizData.questions.length) {
+                const qObj = quizData.questions[currentQuestion];
+                document.getElementById('question-text').innerText = `${currentQuestion + 1}. ${qObj.q}`;
+                
+                const optionsDiv = document.getElementById('quiz-options');
+                optionsDiv.innerHTML = "";
+
+                // Cria opções dinâmicas simuladas com base na resposta certa e alternativas criativas
+                const opcoes = [qObj.ans, "Viajar para a praia", "Ficar dormindo", "Assistir séries"];
+                // Embaralha as opções de forma simples
+                opcoes.sort(() => Math.random() - 0.5);
+
+                opcoes.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = "option-btn";
+                    btn.innerText = opt;
+                    btn.onclick = () => responderAmigo(opt, qObj.ans);
+                    optionsDiv.appendChild(btn);
+                });
             } else {
-                mostrarResultado();
+                mostrarResultadoAmigo();
             }
         }
 
-        function mostrarResultado() {
-            quizBox.style.display = "none";
-            resultBox.style.display = "block";
-            finalScoreEl.innerText = `${pontuacao}/${perguntas.length}`;
+        function responderAmigo(escolha, correta) {
+            if (escolha === correta) {
+                score++;
+            }
+            currentQuestion++;
+            carregarPerguntaAmigo();
+        }
 
-            if (pontuacao === perguntas.length) {
-                resultMsgEl.innerText = "🏆 Perfeito! Você é um verdadeiro mestre nerd!";
-            } else if (pontuacao >= 2) {
-                resultMsgEl.innerText = "👍 Muito bom! Você manja bastante de entretenimento.";
+        function mostrarResultadoAmigo() {
+            document.getElementById('screen-quiz').classList.add('hidden');
+            document.getElementById('screen-result').classList.remove('hidden');
+            
+            const total = quizData.questions.length;
+            document.getElementById('score-text').innerText = `${score}/${total}`;
+            
+            if (score === total) {
+                document.getElementById('result-comment').innerText = `${playerName}, você conhece o(a) ${quizData.name} perfeitamente! Melhores amigos oficiais 🏆`;
             } else {
-                resultMsgEl.innerText = "😅 Precisa assistir a mais filmes e jogar mais!";
+                document.getElementById('result-comment').innerText = `${playerName}, precisa prestar mais atenção nos gostos do(a) ${quizData.name}! 😅`;
             }
         }
 
-        function reiniciarQuiz() {
-            perguntaAtual = 0;
-            pontuacao = 0;
-            resultBox.style.display = "none";
-            quizBox.style.display = "block";
-            carregarPergunta();
+        function criarNovoTeste() {
+            window.location.href = window.location.origin + window.location.pathname;
         }
-
-        // Iniciar o jogo
-        carregarPergunta();
     </script>
-
 </body>
 </html>
